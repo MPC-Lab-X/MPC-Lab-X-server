@@ -128,6 +128,69 @@ const updateUserById = async (userId, update) => {
   }
 };
 
+/**
+ * @function addSafetyRecordById - Add a safety record to a user by ID. The safety records are limited to 100 records.
+ * @param {string} userId - The user's ID.
+ * @param {string} type - The type of safety record.
+ * @param {string} ip - The IP address of the safety record.
+ * @param {string} device - The device of the safety record.
+ * @returns {Promise<Object>} The updated user object.
+ * @throws {Error} Throws an error if the user fails to update.
+ */
+const addSafetyRecordById = async (userId, type, ip, device) => {
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw new Error("Invalid user ID");
+
+  try {
+    const safetyRecord = { type, date: new Date(), ip, device };
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          safetyRecords: {
+            $each: [safetyRecord],
+            $sort: { date: -1 },
+            $slice: -100,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) throw new Error("User not found");
+
+    return updatedUser;
+  } catch (error) {
+    console.error("Error in adding safety record by ID: ", error);
+    throw error;
+  }
+};
+
+/**
+ * @function getSafetyRecordsById - Get the safety records of a user by ID.
+ * @param {string} userId - The user's ID.
+ * @param {number} limit - The number of safety records to return.
+ * @param {number} offset - The number of safety records to skip.
+ * @returns {Promise<Array>} The user's safety records.
+ * @throws {Error} Throws an error if the user fails to get.
+ */
+const getSafetyRecordsById = async (userId, limit = 20, offset = 0) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) return null;
+
+  try {
+    const user = await User.findById(userId, {
+      safetyRecords: { $slice: [offset, limit] },
+    });
+
+    if (!user) throw new Error("User not found or no safety records");
+
+    return user.safetyRecords;
+  } catch (error) {
+    console.error("Error in getting safety records by ID: ", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -135,4 +198,6 @@ module.exports = {
   getUserByEmail,
   getUserByUsername,
   updateUserById,
+  addSafetyRecordById,
+  getSafetyRecordsById,
 };

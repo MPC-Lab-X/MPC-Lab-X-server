@@ -52,7 +52,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    safetyRecords: [safetyRecordSchema],
+    safetyRecords: {
+      type: [safetyRecordSchema],
+      required: false,
+      default: [],
+      select: false, // Do not return the safety records by default
+    },
   },
   {
     timestamps: true,
