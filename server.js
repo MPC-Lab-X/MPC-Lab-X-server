@@ -8,10 +8,15 @@ require("dotenv").config();
 
 // Load required modules
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
+const connectDB = require("./src/db/db");
 const port = process.env.PORT || 5000;
 const host = process.env.HOST || "localhost";
+
+const app = express();
+
+// Connect to the database
+connectDB();
 
 app.use(express.static("public"));
 
