@@ -3,6 +3,7 @@
  * @description User service for interacting with the database.
  */
 
+const mongoose = require("mongoose");
 const User = require("../models/userSchema");
 const { hashPassword, verifyPassword } = require("./passwordHashService");
 
@@ -53,4 +54,60 @@ const loginUser = async (identifier, password) => {
   }
 };
 
-module.exports = { createUser, loginUser };
+/**
+ * @function getUserById - Get a user by ID.
+ * @param {string} userId - The user's ID.
+ * @returns {Promise<Object>} The user object.
+ * @throws {Error} Throws an error if the user fails to get.
+ */
+const getUserById = async (userId) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) return null;
+
+  try {
+    const user = await User.findById(userId);
+    return user;
+  } catch (error) {
+    console.error("Error in getting user by ID: ", error);
+    throw error;
+  }
+};
+
+/**
+ * @function getUserByEmail - Get a user by email.
+ * @param {string} email - The user's email.
+ * @returns {Promise<Object>} The user object.
+ * @throws {Error} Throws an error if the user fails to get.
+ */
+const getUserByEmail = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+    return user;
+  } catch (error) {
+    console.error("Error in getting user by email: ", error);
+    throw error;
+  }
+};
+
+/**
+ * @function getUserByUsername - Get a user by username.
+ * @param {string} username - The user's username.
+ * @returns {Promise<Object>} The user object.
+ * @throws {Error} Throws an error if the user fails to get.
+ */
+const getUserByUsername = async (username) => {
+  try {
+    const user = await User.findOne({ username });
+    return user;
+  } catch (error) {
+    console.error("Error in getting user by username: ", error);
+    throw error;
+  }
+};
+
+module.exports = {
+  createUser,
+  loginUser,
+  getUserById,
+  getUserByEmail,
+  getUserByUsername,
+};
