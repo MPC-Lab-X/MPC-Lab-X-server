@@ -40,7 +40,7 @@ const loginUser = async (identifier, password) => {
   try {
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    });
+    }).select("+password");
     if (!user) {
       throw new Error("User not found");
     }
