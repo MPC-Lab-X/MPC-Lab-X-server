@@ -14,12 +14,12 @@ const { hashPassword, verifyPassword } = require("./passwordHashService");
  */
 const createUser = async (user) => {
   try {
-    if (userData.password) {
-      userData.password = await hashPassword(userData.password);
+    if (user.password) {
+      user.password = await hashPassword(user.password);
     } else {
       throw new Error("Password is required");
     }
-    const newUser = new User(userData);
+    const newUser = new User(user);
     const savedUser = await newUser.save();
     return savedUser;
   } catch (error) {
