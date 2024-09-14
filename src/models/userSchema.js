@@ -64,8 +64,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Index the user schema by username and email
-userSchema.index({ username: 1, email: 1 });
+// Index the username field
+userSchema.index({ username: 1 }, { unique: true });
+
+// Index the email field
+userSchema.index({ email: 1 }, { unique: true });
 
 // Create the user model
 const User = mongoose.model("User", userSchema);
