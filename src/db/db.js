@@ -1,5 +1,5 @@
 /**
- * @file db/db.js
+ * @file src/db/db.js
  * @description Database connection and initialization.
  */
 
