@@ -104,10 +104,35 @@ const getUserByUsername = async (username) => {
   }
 };
 
+/**
+ * @function updateUserById - Update a user by ID.
+ * @param {string} userId - The user's ID.
+ * @param {Object} update - The user object to update.
+ * @returns {Promise<Object>} The updated user object.
+ * @throws {Error} Throws an error if the user fails to update.
+ */
+const updateUserById = async (userId, update) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) return null;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, update, {
+      new: true,
+    });
+    if (!updatedUser) {
+      throw new Error("User not found");
+    }
+    return updatedUser;
+  } catch (error) {
+    console.error("Error in updating user by ID: ", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
   getUserById,
   getUserByEmail,
   getUserByUsername,
+  updateUserById,
 };
