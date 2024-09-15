@@ -55,4 +55,18 @@ const validateUsername = (username) => {
   }
 };
 
-module.exports = { validateEmail, validatePassword, validateUsername };
+/**
+ * @function validateIdentifier - Validate an identifier. (email or username)
+ * @param {string} identifier - The identifier to validate.
+ * @returns {boolean} - True if the identifier is valid, false otherwise.
+ */
+const validateIdentifier = (identifier) => {
+  return validateEmail(identifier) || validateUsername(identifier);
+};
+
+module.exports = {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+  validateIdentifier,
+};
