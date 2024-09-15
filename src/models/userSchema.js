@@ -90,6 +90,14 @@ userSchema.index({ username: 1 }, { unique: true });
 // Index the email field
 userSchema.index({ email: 1 }, { unique: true });
 
+// Delete the password field when converting to JSON
+userSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    delete ret.password;
+    return ret;
+  },
+});
+
 // Create the user model
 const User = mongoose.model("User", userSchema);
 
