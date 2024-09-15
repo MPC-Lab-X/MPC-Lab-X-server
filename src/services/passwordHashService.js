@@ -3,7 +3,7 @@
  * @description Password hashing and verification service.
  */
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 /**
  * @function hashPassword - Hash a password using bcrypt.
