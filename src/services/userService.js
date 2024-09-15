@@ -55,6 +55,27 @@ const loginUser = async (identifier, password) => {
 };
 
 /**
+ * @function getRefreshTokenSecret - Get the refresh token secret for a user. (Secret key + user Password)
+ * @param {string} userId - The user's ID.
+ * @param {string} secret - The secret key.
+ * @returns {string} The refresh token secret.
+ * @throws {Error} Throws an error if the secret fails to get.
+ */
+const getRefreshTokenSecret = async (userId, secret) => {
+  if (!mongoose.Types.ObjectId.isValid(userId))
+    throw new Error("Invalid user ID");
+
+  try {
+    const user = await User.findById(userId).select("+password");
+    if (!user) throw new Error("User not found");
+    return secret + user.password;
+  } catch (error) {
+    console.error("Error in getting refresh token secret: ", error);
+    throw error;
+  }
+};
+
+/**
  * @function getUserById - Get a user by ID.
  * @param {string} userId - The user's ID.
  * @returns {Promise<Object>} The user object.
@@ -194,6 +215,7 @@ const getSafetyRecordsById = async (userId, limit = 20, offset = 0) => {
 module.exports = {
   createUser,
   loginUser,
+  getRefreshTokenSecret,
   getUserById,
   getUserByEmail,
   getUserByUsername,
