@@ -20,6 +20,9 @@ const host = process.env.HOST || "localhost";
 
 const app = express();
 
+// Trust the first proxy
+app.set("trust proxy", 1);
+
 // Connect to the database
 connectDB();
 

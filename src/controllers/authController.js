@@ -100,6 +100,14 @@ const completeRegistration = async (req, res) => {
   try {
     const user = await userService.createUser({ email, username, password });
     res.success(user, "User created successfully.");
+
+    // Log the user's account creation
+    await userService.addSafetyRecordById(
+      user._id,
+      "ACCOUNT_CREATED",
+      req.ip,
+      req.headers["user-agent"]
+    );
   } catch (error) {
     res.internalServerError("Error creating user.", "CREATE_USER_ERROR");
   }
@@ -146,11 +154,27 @@ const loginUser = async (req, res) => {
       },
       "User logged in successfully."
     );
+
+    // Log the user's login
+    await userService.addSafetyRecordById(
+      user._id,
+      "LOGIN_SUCCESS",
+      req.ip,
+      req.headers["user-agent"]
+    );
   } catch (error) {
     if (error.message === "User not found") {
       return res.notFound("User not found.", "USER_NOT_FOUND");
     }
     if (error.message === "Invalid password") {
+      // Log the failed login attempt
+      await userService.addSafetyRecordById(
+        user._id,
+        "LOGIN_FAILED",
+        req.ip,
+        req.headers["user-agent"]
+      );
+
       return res.unauthorized("Invalid password.", "INVALID_PASSWORD");
     }
     res.internalServerError("Error logging in user.", "LOGIN_USER_ERROR");
@@ -228,6 +252,14 @@ const resetPassword = async (req, res) => {
     await emailService.sendEmailVerification(email, token, callbackUrl);
 
     res.success(null, "Password reset email sent.");
+
+    // Log the password reset request
+    await userService.addSafetyRecordById(
+      user._id,
+      "PASSWORD_RESET_REQUESTED",
+      req.ip,
+      req.headers["user-agent"]
+    );
   } catch (error) {
     console.error("Error sending password reset email: ", error);
     res.internalServerError(
@@ -283,7 +315,16 @@ const completeResetPassword = async (req, res) => {
     const updatedUser = await userService.updateUserById(user._id, {
       password,
     });
+
     res.success(updatedUser, "Password reset successfully.");
+
+    // Log the password reset
+    await userService.addSafetyRecordById(
+      user._id,
+      "PASSWORD_RESET_SUCCESS",
+      req.ip,
+      req.headers["user-agent"]
+    );
   } catch (error) {
     res.internalServerError(
       "Error resetting password.",

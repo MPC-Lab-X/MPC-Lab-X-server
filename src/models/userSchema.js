@@ -10,6 +10,17 @@ const safetyRecordSchema = new mongoose.Schema(
   {
     type: {
       type: String,
+      enum: [
+        "LOGIN_SUCCESS",
+        "LOGIN_FAILED",
+        "PASSWORD_RESET_REQUESTED",
+        "PASSWORD_RESET_SUCCESS",
+        "EMAIL_CHANGED",
+        "PASSWORD_CHANGED",
+        "ACCOUNT_CREATED",
+        "ACCOUNT_LOCKED",
+        "ACCOUNT_UNLOCKED",
+      ],
       required: true,
     },
     date: {
