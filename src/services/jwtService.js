@@ -17,6 +17,16 @@ const generateToken = (payload, secret, expiresIn) => {
 };
 
 /**
+ * @function decodeToken - Decode a JWT and return the payload.
+ * @param {string} token - The JWT to decode.
+ * @returns {Object} - The payload from the JWT.
+ * @throws {Error} - Throws an error if the JWT is invalid.
+ */
+const decodeToken = (token) => {
+  return jwt.decode(token);
+};
+
+/**
  * @function verifyToken - Verify a JWT and return the payload.
  * @param {string} token - The JWT to verify.
  * @param {string} secret - The secret key to verify the JWT with.
@@ -27,4 +37,4 @@ const verifyToken = (token, secret) => {
   return jwt.verify(token, secret);
 };
 
-module.exports = { generateToken, verifyToken };
+module.exports = { generateToken, decodeToken, verifyToken };
