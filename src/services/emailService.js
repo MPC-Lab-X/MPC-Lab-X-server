@@ -35,7 +35,33 @@ const sendEmail = async (options) => {
     html: options.html,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    throw error;
+  }
 };
 
-module.exports = sendEmail;
+/**
+ * @function sendEmailVerification - Send an email verification email. (with JWT token)
+ * @param {string} email - The email address to send the verification email to.
+ * @param {string} token - The JWT token to include in the verification URL.
+ * @param {string} callbackUrl - The URL to redirect to after verification.
+ */
+const sendEmailVerification = async (email, token, callbackUrl) => {
+  const verificationUrl = `${callbackUrl}?token=${token}`;
+
+  try {
+    await sendEmail({
+      from: process.env.EMAIL_SENDER,
+      to: email,
+      subject: "Verify your email | MPC-Lab",
+      text: `Please click the following link to verify your email: ${verificationUrl}`,
+      html: `<p>Please click the following link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a></p>`,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { sendEmail, sendEmailVerification };
