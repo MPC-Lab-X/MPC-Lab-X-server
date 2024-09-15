@@ -67,6 +67,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    locked: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     safetyRecords: {
       type: [safetyRecordSchema],
       required: false,

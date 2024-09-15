@@ -177,6 +177,9 @@ const loginUser = async (req, res) => {
 
       return res.unauthorized("Invalid password.", "INVALID_PASSWORD");
     }
+    if (error.message === "Account locked") {
+      return res.forbidden("Account locked.", "ACCOUNT_LOCKED");
+    }
     res.internalServerError("Error logging in user.", "LOGIN_USER_ERROR");
   }
 };

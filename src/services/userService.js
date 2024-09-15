@@ -48,6 +48,9 @@ const loginUser = async (identifier, password) => {
     if (!isValid) {
       throw new Error("Invalid password");
     }
+    if (user.locked) {
+      throw new Error("Account locked");
+    }
     return user;
   } catch (error) {
     throw error;
@@ -68,7 +71,7 @@ const getRefreshTokenSecret = async (userId, secret) => {
   try {
     const user = await User.findById(userId).select("+password");
     if (!user) throw new Error("User not found");
-    return secret + user.password;
+    return `${secret}.${user.password}.${user.locked}`;
   } catch (error) {
     console.error("Error in getting refresh token secret: ", error);
     throw error;
