@@ -10,6 +10,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const responseMiddleware = require("./src/middlewares/responseMiddleware");
+const authMiddleware = require("./src/middlewares/authMiddleware");
 const connectDB = require("./src/db/db");
 const routes = require("./src/routes/index");
 const port = process.env.PORT || 5000;
@@ -25,6 +26,8 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 
 app.use(responseMiddleware);
+
+app.use(authMiddleware);
 
 app.use("/api", routes);
 

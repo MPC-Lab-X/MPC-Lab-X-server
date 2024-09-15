@@ -3,6 +3,13 @@
  * @description Middleware for handling responses.
  */
 
+/**
+ * @function responseMiddleware - Middleware for handling responses.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Function} - The next middleware function.
+ */
 const responseMiddleware = (req, res, next) => {
   /**
    * @function success - Sends a success response. (200)
