@@ -197,9 +197,106 @@ const refreshToken = async (req, res) => {
   }
 };
 
+/**
+ * @function resetPassword - Handle password reset request.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+const resetPassword = async (req, res) => {
+  const { email, callbackUrl } = req.body;
+
+  // Check if the email is valid
+  if (!email || !validationUtils.validateEmail(email)) {
+    return res.badRequest("Invalid email address.", "INVALID_EMAIL");
+  }
+
+  // Check if the user exists
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    return res.notFound("User not found.", "USER_NOT_FOUND");
+  }
+
+  // Generate a JWT token with the email (for verification)
+  const token = jwtService.generateToken(
+    { email },
+    process.env.JWT_SECRET,
+    "1h"
+  );
+
+  // Send the password reset email
+  try {
+    await emailService.sendEmailVerification(email, token, callbackUrl);
+
+    res.success(null, "Password reset email sent.");
+  } catch (error) {
+    console.error("Error sending password reset email: ", error);
+    res.internalServerError(
+      "Error sending password reset email.",
+      "SEND_EMAIL_ERROR"
+    );
+  }
+};
+
+/**
+ * @function completeResetPassword - Handle password reset completion request.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+const completeResetPassword = async (req, res) => {
+  const { token, password } = req.body;
+
+  let email;
+
+  // Verify JWT token
+  try {
+    const payload = jwtService.verifyToken(token, process.env.JWT_SECRET);
+    if (!payload.email) {
+      return res.badRequest("Invalid token.", "INVALID_TOKEN");
+    }
+    email = payload.email;
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.unauthorized("Token expired.", "TOKEN_EXPIRED");
+    }
+    if (error.name === "JsonWebTokenError") {
+      return res.badRequest("Invalid token.", "INVALID_TOKEN");
+    } else {
+      return res.internalServerError(
+        "Error verifying token.",
+        "VERIFY_TOKEN_ERROR"
+      );
+    }
+  }
+
+  // Check if the password is valid
+  if (!password || !validationUtils.validatePassword(password)) {
+    return res.badRequest("Invalid password.", "INVALID_PASSWORD");
+  }
+
+  // Update the user's password
+  try {
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      return res.notFound("User not found.", "USER_NOT_FOUND");
+    }
+
+    const updatedUser = await userService.updateUserById(user._id, {
+      password,
+    });
+    res.success(updatedUser, "Password reset successfully.");
+  } catch (error) {
+    res.internalServerError(
+      "Error resetting password.",
+      "RESET_PASSWORD_ERROR"
+    );
+  }
+};
+
 module.exports = {
   registerUser,
   completeRegistration,
   loginUser,
   refreshToken,
+  resetPassword,
+  completeResetPassword,
 };
