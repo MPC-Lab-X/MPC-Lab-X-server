@@ -73,7 +73,6 @@ const getRefreshTokenSecret = async (userId, secret) => {
     if (!user) throw new Error("User not found");
     return `${secret}.${user.password}.${user.locked}`;
   } catch (error) {
-    console.error("Error in getting refresh token secret: ", error);
     throw error;
   }
 };
