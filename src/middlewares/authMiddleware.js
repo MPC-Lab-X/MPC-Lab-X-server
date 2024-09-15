@@ -5,6 +5,15 @@
 
 const jwtService = require("../services/jwtService");
 
+const publicRoutes = [
+  "/api/auth/register",
+  "/api/auth/complete-registration",
+  "/api/auth/login",
+  "/api/auth/refresh-token",
+  "/api/auth/reset-password",
+  "/api/auth/complete-reset-password",
+];
+
 /**
  * @function authMiddleware - Authenticate the user's JWT.
  * @param {Object} req - The request object.
@@ -13,6 +22,10 @@ const jwtService = require("../services/jwtService");
  * @returns {Function} - The next middleware function.
  */
 const authMiddleware = (req, res, next) => {
+  if (publicRoutes.includes(req.path)) {
+    return next();
+  }
+
   const token = req.headers["authorization"];
 
   if (!token) {
