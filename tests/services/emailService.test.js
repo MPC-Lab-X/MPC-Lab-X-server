@@ -1,3 +1,8 @@
+/**
+ * @file tests/services/emailService.test.js
+ * @description Tests for the email service functions.
+ */
+
 const { sendEmail } = require("../../src/services/emailService");
 const nodemailer = require("nodemailer");
 
