@@ -263,7 +263,10 @@ describe("AuthController - loginUser", () => {
   it("should return 401 if password is invalid", async () => {
     validationUtils.validateIdentifier.mockReturnValue(true);
     validationUtils.validatePassword.mockReturnValue(true);
-    userService.loginUser.mockRejectedValue(new Error("Invalid password"));
+    userService.loginUser.mockRejectedValue({
+      message: "Invalid password",
+      user: { _id: "userId" },
+    });
 
     const res = await request(app)
       .post("/api/auth/login")

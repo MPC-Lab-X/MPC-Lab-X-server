@@ -169,7 +169,7 @@ const loginUser = async (req, res) => {
     if (error.message === "Invalid password") {
       // Log the failed login attempt
       await userService.addSafetyRecordById(
-        user._id,
+        error.user._id,
         "LOGIN_FAILED",
         req.ip,
         req.headers["user-agent"]

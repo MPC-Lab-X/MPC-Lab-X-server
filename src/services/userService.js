@@ -42,14 +42,14 @@ const loginUser = async (identifier, password) => {
       $or: [{ email: identifier }, { username: identifier }],
     }).select("+password");
     if (!user) {
-      throw new Error("User not found");
+      throw { message: "User not found", user: null };
     }
     const isValid = await verifyPassword(password, user.password);
     if (!isValid) {
-      throw new Error("Invalid password");
+      throw { message: "Invalid password", user: user };
     }
     if (user.locked) {
-      throw new Error("Account locked");
+      throw { message: "Account locked", user: user };
     }
     return user;
   } catch (error) {
