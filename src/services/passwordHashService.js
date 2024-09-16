@@ -29,7 +29,6 @@ const hashPassword = async (password) => {
  * @returns {Promise<boolean>} - A promise that resolves to true if the password is valid, false otherwise.
  * @throws {Error} - Throws an error if the password verification fails.
  */
-
 const verifyPassword = async (password, hash) => {
   try {
     const isValid = await bcrypt.compare(password, hash);
