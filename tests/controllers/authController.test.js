@@ -1,3 +1,8 @@
+/**
+ * @file tests/controllers/authController.test.js
+ * @description Tests for the auth controller.
+ */
+
 const request = require("supertest");
 const app = require("../../server");
 const userService = require("../../src/services/userService");
