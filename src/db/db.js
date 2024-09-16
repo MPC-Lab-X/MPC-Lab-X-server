@@ -24,4 +24,20 @@ const connectDB = async () => {
   isConnected = db.connections[0].readyState;
 };
 
-module.exports = connectDB;
+/**
+ * @function disconnectDB - Disconnect from the database.
+ * @returns {Promise} - A promise that resolves when the disconnection is successful.
+ * @throws {Error} - Throws an error if the disconnection fails.
+ */
+const disconnectDB = async () => {
+  if (!isConnected) {
+    console.log("=> no active database connection to close");
+    return;
+  }
+
+  console.log("=> closing database connection");
+  await mongoose.disconnect();
+  isConnected = false;
+};
+
+module.exports = { connectDB, disconnectDB };
