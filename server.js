@@ -24,7 +24,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Connect to the database
-db.connectDB();
+if (process.env.NODE_ENV !== "test") db.connectDB();
 
 // Middleware setup
 app.use(express.static("public"));
