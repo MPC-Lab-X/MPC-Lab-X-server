@@ -47,7 +47,7 @@ const updateUsername = async (req, res) => {
   const { username } = req.body;
 
   // Check if user is authorized to update
-  if (req.user.id !== id) {
+  if (req.user.userId !== id) {
     return res.unauthorized(
       "Unauthorized to update this user.",
       "UNAUTHORIZED"
@@ -88,7 +88,7 @@ const updateEmail = async (req, res) => {
   const { email, callbackUrl } = req.body;
 
   // Check if user is authorized to update
-  if (req.user.id !== id) {
+  if (req.user.userId !== id) {
     return res.unauthorized(
       "Unauthorized to update this user.",
       "UNAUTHORIZED"
@@ -136,7 +136,7 @@ const completeEmailUpdate = async (req, res) => {
   const { token } = req.body;
 
   // Check if user is authorized to update
-  if (req.user.id !== id) {
+  if (req.user.userId !== id) {
     return res.unauthorized(
       "Unauthorized to update this user.",
       "UNAUTHORIZED"
@@ -189,7 +189,7 @@ const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   // Check if user is authorized to update
-  if (req.user.id !== id) {
+  if (req.user.userId !== id) {
     return res.unauthorized(
       "Unauthorized to update this user.",
       "UNAUTHORIZED"
