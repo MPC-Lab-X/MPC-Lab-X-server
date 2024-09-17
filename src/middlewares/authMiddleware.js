@@ -26,10 +26,14 @@ const authMiddleware = (req, res, next) => {
     return next();
   }
 
-  const token = req.headers["authorization"];
+  let token = req.headers["authorization"];
 
   if (!token) {
     return res.unauthorized("No token provided.", "NO_TOKEN");
+  }
+
+  if (token.startsWith("Bearer ")) {
+    token = token.split(" ")[1];
   }
 
   try {
