@@ -29,10 +29,50 @@ const getUser = async (req, res) => {
 
     return res.success(user, "User found successfully.");
   } catch (error) {
+    return res.internalServerError("Error getting user.", "GET_USER_ERROR");
+  }
+};
+
+/**
+ * @function getSafetyRecords - Get a user's safety records.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
+const getSafetyRecords = async (req, res) => {
+  const { id } = req.params;
+  let { limit, offset } = req.query;
+
+  // Check if user is authorized to get safety records
+  if (req.user.userId !== id) {
+    return res.unauthorized(
+      "Unauthorized to get safety records for this user.",
+      "UNAUTHORIZED"
+    );
+  }
+
+  // Check if limit and offset are valid
+  if (limit && !validationUtils.validateLimit(limit)) {
+    return res.badRequest("Invalid limit.", "INVALID_LIMIT");
+  }
+  if (offset && !validationUtils.validateOffset(offset)) {
+    return res.badRequest("Invalid offset.", "INVALID_OFFSET");
+  }
+
+  try {
+    limit = limit ? parseInt(limit) : 10;
+    offset = offset ? parseInt(offset) : 0;
+
+    const safetyRecords = await userService.getSafetyRecordsById(
+      id,
+      limit,
+      offset
+    );
+
+    return res.success(safetyRecords, "Safety records found successfully.");
+  } catch (error) {
     return res.internalServerError(
-      "Error getting user.",
-      "GET_USER_ERROR",
-      error
+      "Error getting safety records.",
+      "GET_SAFETY_RECORDS_ERROR"
     );
   }
 };
@@ -72,8 +112,7 @@ const updateUsername = async (req, res) => {
   } catch (error) {
     return res.internalServerError(
       "Error updating username.",
-      "UPDATE_USERNAME_ERROR",
-      error
+      "UPDATE_USERNAME_ERROR"
     );
   }
 };
@@ -107,8 +146,7 @@ const updateDisplayName = async (req, res) => {
   } catch (error) {
     return res.internalServerError(
       "Error updating display name.",
-      "UPDATE_DISPLAY_NAME_ERROR",
-      error
+      "UPDATE_DISPLAY_NAME_ERROR"
     );
   }
 };
@@ -155,8 +193,7 @@ const updateEmail = async (req, res) => {
   } catch (error) {
     return res.internalServerError(
       "Error sending verification email.",
-      "SEND_EMAIL_ERROR",
-      error
+      "SEND_EMAIL_ERROR"
     );
   }
 };
@@ -208,8 +245,7 @@ const completeEmailUpdate = async (req, res) => {
   } catch (error) {
     return res.internalServerError(
       "Error updating email.",
-      "UPDATE_EMAIL_ERROR",
-      error
+      "UPDATE_EMAIL_ERROR"
     );
   }
 };
@@ -262,14 +298,14 @@ const updatePassword = async (req, res) => {
   } catch (error) {
     return res.internalServerError(
       "Error updating password.",
-      "UPDATE_PASSWORD_ERROR",
-      error
+      "UPDATE_PASSWORD_ERROR"
     );
   }
 };
 
 module.exports = {
   getUser,
+  getSafetyRecords,
   updateUsername,
   updateDisplayName,
   updateEmail,
