@@ -51,6 +51,13 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    displayName: {
+      type: String,
+      required: true,
+      default: function () {
+        return this.username;
+      },
+    },
     email: {
       type: String,
       required: true,
