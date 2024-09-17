@@ -9,6 +9,8 @@ const {
   validateUsername,
   validateDisplayName,
   validateIdentifier,
+  validateLimit,
+  validateOffset,
 } = require("../../src/utils/validationUtils");
 
 describe("validateEmail", () => {
@@ -185,5 +187,65 @@ describe("validateIdentifier", () => {
   test("should return false for an identifier with spaces", () => {
     expect(validateIdentifier("test @example.com")).toBe(false);
     expect(validateIdentifier("user name")).toBe(false);
+  });
+});
+
+describe("validateLimit", () => {
+  test("should return false for a non-numeric limit", () => {
+    expect(validateLimit("abc")).toBe(false);
+  });
+
+  test("should return false for a negative limit", () => {
+    expect(validateLimit("-1")).toBe(false);
+  });
+
+  test("should return false for a limit of zero", () => {
+    expect(validateLimit("0")).toBe(false);
+  });
+
+  test("should return false for a limit greater than 100", () => {
+    expect(validateLimit("101")).toBe(false);
+  });
+
+  test("should return true for a valid limit within range", () => {
+    expect(validateLimit("50")).toBe(true);
+  });
+
+  test("should return true for a limit of 1", () => {
+    expect(validateLimit("1")).toBe(true);
+  });
+
+  test("should return true for a limit of 100", () => {
+    expect(validateLimit("100")).toBe(true);
+  });
+});
+
+describe("validateOffset", () => {
+  test("should return false for a non-numeric offset", () => {
+    expect(validateOffset("abc")).toBe(false);
+  });
+
+  test("should return false for a negative offset", () => {
+    expect(validateOffset("-1")).toBe(false);
+  });
+
+  test("should return true for an offset of zero", () => {
+    expect(validateOffset("0")).toBe(true);
+  });
+
+  test("should return true for a positive offset", () => {
+    expect(validateOffset("10")).toBe(true);
+  });
+
+  test("should return true for an offset string that is a number", () => {
+    expect(validateOffset("5")).toBe(true);
+  });
+
+  test("should return false for an offset that is null", () => {
+    expect(validateOffset(null)).toBe(false);
+  });
+
+  test("should return false for an offset that is undefined", () => {
+    expect(validateOffset(undefined)).toBe(false);
   });
 });
