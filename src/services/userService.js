@@ -40,7 +40,7 @@ const loginUser = async (identifier, password) => {
   try {
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    }).select("+password");
+    });
     if (!user) {
       throw { message: "User not found", user: null };
     }
@@ -69,7 +69,7 @@ const getRefreshTokenSecret = async (userId, secret) => {
     throw new Error("Invalid user ID");
 
   try {
-    const user = await User.findById(userId).select("+password");
+    const user = await User.findById(userId);
     if (!user) throw new Error("User not found");
     return `${secret}.${user.password}.${user.locked}`;
   } catch (error) {
