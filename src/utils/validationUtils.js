@@ -80,10 +80,30 @@ const validateIdentifier = (identifier) => {
   return validateEmail(identifier) || validateUsername(identifier);
 };
 
+/**
+ * @function validateLimit - Validate a limit query parameter.
+ * @param {string} limit - The limit query parameter to validate.
+ * @returns {boolean} - True if the limit is valid, false otherwise.
+ */
+const validateLimit = (limit) => {
+  return !isNaN(limit) && parseInt(limit) > 0 && parseInt(limit) <= 100;
+};
+
+/**
+ * @function validateOffset - Validate an offset query parameter.
+ * @param {string} offset - The offset query parameter to validate.
+ * @returns {boolean} - True if the offset is valid, false otherwise.
+ */
+const validateOffset = (offset) => {
+  return !isNaN(offset) && parseInt(offset) >= 0;
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
   validateUsername,
   validateDisplayName,
   validateIdentifier,
+  validateLimit,
+  validateOffset,
 };
