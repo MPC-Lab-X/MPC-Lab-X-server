@@ -79,6 +79,41 @@ const updateUsername = async (req, res) => {
 };
 
 /**
+ * @function updateDisplayName - Update a user's display name.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
+const updateDisplayName = async (req, res) => {
+  const { id } = req.params;
+  const { displayName } = req.body;
+
+  // Check if user is authorized to update
+  if (req.user.userId !== id) {
+    return res.unauthorized(
+      "Unauthorized to update this user.",
+      "UNAUTHORIZED"
+    );
+  }
+
+  // Check if display name is valid
+  if (!validationUtils.validateDisplayName(displayName)) {
+    return res.badRequest("Invalid display name.", "INVALID_DISPLAY_NAME");
+  }
+
+  // Update display name
+  try {
+    const user = await userService.updateUserById(id, { displayName });
+    return res.success(user, "Display name updated successfully.");
+  } catch (error) {
+    return res.internalServerError(
+      "Error updating display name.",
+      "UPDATE_DISPLAY_NAME_ERROR",
+      error
+    );
+  }
+};
+
+/**
  * @function updateEmail - Handle updating a user's email request.
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
@@ -236,6 +271,7 @@ const updatePassword = async (req, res) => {
 module.exports = {
   getUser,
   updateUsername,
+  updateDisplayName,
   updateEmail,
   completeEmailUpdate,
   updatePassword,

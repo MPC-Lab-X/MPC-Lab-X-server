@@ -11,6 +11,7 @@ const userController = require("../controllers/userController");
 router.get("/:id", userController.getUser);
 
 router.put("/:id/username", userController.updateUsername);
+router.put("/:id/display-name", userController.updateDisplayName);
 router.put("/:id/email", userController.updateEmail);
 router.put("/:id/email/complete", userController.completeEmailUpdate);
 router.put("/:id/password", userController.updatePassword);
