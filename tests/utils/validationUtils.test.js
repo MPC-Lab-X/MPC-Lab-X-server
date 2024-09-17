@@ -7,6 +7,7 @@ const {
   validateEmail,
   validatePassword,
   validateUsername,
+  validateDisplayName,
   validateIdentifier,
 } = require("../../src/utils/validationUtils");
 
@@ -102,6 +103,44 @@ describe("validateUsername", () => {
 
   test("should return true for a valid username with mixed case", () => {
     expect(validateUsername("UserName")).toBe(true);
+  });
+});
+
+describe("validateDisplayName", () => {
+  test("should return true for a display name that is empty", () => {
+    expect(validateDisplayName("")).toBe(true);
+  });
+
+  test("should return false for a display name with leading spaces", () => {
+    expect(validateDisplayName(" leading")).toBe(false);
+  });
+
+  test("should return false for a display name with trailing spaces", () => {
+    expect(validateDisplayName("trailing ")).toBe(false);
+  });
+
+  test("should return false for a display name with consecutive spaces", () => {
+    expect(validateDisplayName("consecutive  spaces")).toBe(false);
+  });
+
+  test("should return false for a display name longer than 20 characters", () => {
+    expect(validateDisplayName("a".repeat(21))).toBe(false);
+  });
+
+  test("should return true for a valid display name", () => {
+    expect(validateDisplayName("ValidName")).toBe(true);
+  });
+
+  test("should return true for a valid display name with spaces", () => {
+    expect(validateDisplayName("Valid Name")).toBe(true);
+  });
+
+  test("should return false for a display name that is null", () => {
+    expect(validateDisplayName(null)).toBe(false);
+  });
+
+  test("should return false for a display name that is undefined", () => {
+    expect(validateDisplayName(undefined)).toBe(false);
   });
 });
 
