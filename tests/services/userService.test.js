@@ -22,10 +22,7 @@ let mongoServer;
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(uri);
 });
 
 afterAll(async () => {
@@ -80,7 +77,7 @@ describe("User Service", () => {
       hashPassword.mockResolvedValue("hashedpassword123");
       verifyPassword.mockResolvedValue(true);
 
-      const createdUser = await userService.createUser(user);
+      await userService.createUser(user);
 
       const loggedInUser = await userService.loginUser(
         user.email,
@@ -228,7 +225,7 @@ describe("User Service", () => {
 
       hashPassword.mockResolvedValue("hashedpassword123");
 
-      const createdUser = await userService.createUser(user);
+      await userService.createUser(user);
       const foundUser = await userService.getUserByEmail(user.email);
 
       expect(foundUser).toHaveProperty("username", user.username);

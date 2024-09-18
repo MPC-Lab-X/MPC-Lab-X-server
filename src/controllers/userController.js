@@ -294,7 +294,7 @@ const updatePassword = async (req, res) => {
     const updatedUser = await userService.updateUserById(user._id, {
       password: newPassword,
     });
-    return res.success(updatedUser, "Password updated successfully.");
+    return res.success(null, "Password updated successfully.");
   } catch (error) {
     return res.internalServerError(
       "Error updating password.",

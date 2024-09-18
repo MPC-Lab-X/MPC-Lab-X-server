@@ -60,11 +60,10 @@ describe("AuthController - registerUser", () => {
 
 describe("AuthController - completeRegistration", () => {
   it("should return 400 if token is invalid", async () => {
-    const mockError = new Error("Invalid token");
-    mockError.name = "JsonWebTokenError";
-
     jwtService.verifyToken.mockImplementation(() => {
-      throw mockError;
+      const error = new Error("Invalid token");
+      error.name = "JsonWebTokenError";
+      throw error;
     });
 
     const res = await request(app)
@@ -347,11 +346,10 @@ describe("AuthController - refreshToken", () => {
   });
 
   it("should return 400 if refresh token is invalid", async () => {
-    const mockError = new Error("Invalid token");
-    mockError.name = "JsonWebTokenError";
-
     jwtService.decodeToken.mockImplementation(() => {
-      throw mockError;
+      const error = new Error("Invalid token");
+      error.name = "JsonWebTokenError";
+      throw error;
     });
 
     const res = await request(app)
@@ -479,11 +477,10 @@ describe("AuthController - resetPassword", () => {
 
 describe("AuthController - completeResetPassword", () => {
   it("should return 400 if token is invalid", async () => {
-    const mockError = new Error("Invalid token");
-    mockError.name = "JsonWebTokenError";
-
     jwtService.verifyToken.mockImplementation(() => {
-      throw mockError;
+      const error = new Error("Invalid token");
+      error.name = "JsonWebTokenError";
+      throw error;
     });
 
     const res = await request(app)
