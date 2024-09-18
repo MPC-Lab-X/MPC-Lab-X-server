@@ -55,16 +55,16 @@ describe("UserController - getUser", () => {
 });
 
 describe("UserController - getSafetyRecords", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app).get(
       "/api/users/anotherUserId/safety-records"
     );
 
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
     expect(res.body.message).toBe(
-      "Unauthorized to get safety records for this user."
+      "Forbidden to get safety records for this user."
     );
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if limit is invalid", async () => {
@@ -116,14 +116,14 @@ describe("UserController - getSafetyRecords", () => {
 });
 
 describe("UserController - updateUsername", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app)
       .put("/api/users/anotherUserId/username")
       .send({ username: "newUsername" });
 
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Unauthorized to update this user.");
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe("Forbidden to update this user.");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if username is invalid", async () => {
@@ -182,14 +182,14 @@ describe("UserController - updateUsername", () => {
 });
 
 describe("UserController - updateDisplayName", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app)
       .put("/api/users/anotherUserId/display-name")
       .send({ displayName: "New DisplayName" });
 
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Unauthorized to update this user.");
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe("Forbidden to update this user.");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if display name is invalid", async () => {
@@ -235,15 +235,15 @@ describe("UserController - updateDisplayName", () => {
 });
 
 describe("UserController - updateEmail", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app).put("/api/users/anotherUserId/email").send({
       email: "newemail@example.com",
       callbackUrl: "http://example.com",
     });
 
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Unauthorized to update this user.");
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe("Forbidden to update this user.");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if email is invalid", async () => {
@@ -304,14 +304,14 @@ describe("UserController - updateEmail", () => {
 });
 
 describe("UserController - completeEmailUpdate", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app)
       .put("/api/users/anotherUserId/email/complete")
       .send({ token: "mockToken" });
 
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Unauthorized to update this user.");
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe("Forbidden to update this user.");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if token is invalid", async () => {
@@ -401,7 +401,7 @@ describe("UserController - completeEmailUpdate", () => {
 });
 
 describe("UserController - updatePassword", () => {
-  it("should return 401 if user is not authorized", async () => {
+  it("should return 403 if user is not the same as the requested user", async () => {
     const res = await request(app)
       .put("/api/users/anotherUserId/password")
       .send({
@@ -409,9 +409,9 @@ describe("UserController - updatePassword", () => {
         newPassword: "NewPassword123!",
       });
 
-    expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Unauthorized to update this user.");
-    expect(res.body.error.code).toBe("UNAUTHORIZED");
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe("Forbidden to update this user.");
+    expect(res.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 400 if current password is invalid", async () => {

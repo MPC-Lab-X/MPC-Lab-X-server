@@ -42,11 +42,11 @@ const getSafetyRecords = async (req, res) => {
   const { id } = req.params;
   let { limit, offset } = req.query;
 
-  // Check if user is authorized to get safety records
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to get safety records for this user.",
-      "UNAUTHORIZED"
+    return res.forbidden(
+      "Forbidden to get safety records for this user.",
+      "ACCESS_DENIED"
     );
   }
 
@@ -86,12 +86,9 @@ const updateUsername = async (req, res) => {
   const { id } = req.params;
   const { username } = req.body;
 
-  // Check if user is authorized to update
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to update this user.",
-      "UNAUTHORIZED"
-    );
+    return res.forbidden("Forbidden to update this user.", "ACCESS_DENIED");
   }
 
   // Check if username is valid
@@ -126,12 +123,9 @@ const updateDisplayName = async (req, res) => {
   const { id } = req.params;
   const { displayName } = req.body;
 
-  // Check if user is authorized to update
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to update this user.",
-      "UNAUTHORIZED"
-    );
+    return res.forbidden("Forbidden to update this user.", "ACCESS_DENIED");
   }
 
   // Check if display name is valid
@@ -160,12 +154,9 @@ const updateEmail = async (req, res) => {
   const { id } = req.params;
   const { email, callbackUrl } = req.body;
 
-  // Check if user is authorized to update
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to update this user.",
-      "UNAUTHORIZED"
-    );
+    return res.forbidden("Forbidden to update this user.", "ACCESS_DENIED");
   }
 
   // Check if email is valid
@@ -207,12 +198,9 @@ const completeEmailUpdate = async (req, res) => {
   const { id } = req.params;
   const { token } = req.body;
 
-  // Check if user is authorized to update
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to update this user.",
-      "UNAUTHORIZED"
-    );
+    return res.forbidden("Forbidden to update this user.", "ACCESS_DENIED");
   }
 
   let email;
@@ -259,12 +247,9 @@ const updatePassword = async (req, res) => {
   const { id } = req.params;
   const { currentPassword, newPassword } = req.body;
 
-  // Check if user is authorized to update
+  // Check if user is not the same as the requested user
   if (req.user.userId !== id) {
-    return res.unauthorized(
-      "Unauthorized to update this user.",
-      "UNAUTHORIZED"
-    );
+    return res.forbidden("Forbidden to update this user.", "ACCESS_DENIED");
   }
 
   // Check if the current password is valid
