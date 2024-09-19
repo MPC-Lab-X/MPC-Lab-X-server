@@ -124,6 +124,32 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
     }
     ```
 
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid password.",
+      "error": {
+        "code": "INVALID_PASSWORD",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid token.",
+      "error": {
+        "code": "INVALID_TOKEN",
+        "details": {}
+      }
+    }
+    ```
+
   - **Status:** `401 Unauthorized`
 
     ```json
@@ -132,6 +158,45 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
       "message": "Token expired.",
       "error": {
         "code": "TOKEN_EXPIRED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error verifying token.",
+      "error": {
+        "code": "VERIFY_TOKEN_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `409 Conflict`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Email already in use.",
+      "error": {
+        "code": "EMAIL_IN_USE",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `409 Conflict`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Username already in use.",
+      "error": {
+        "code": "USERNAME_IN_USE",
         "details": {}
       }
     }

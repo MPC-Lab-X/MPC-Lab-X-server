@@ -134,7 +134,7 @@ describe("AuthController - completeRegistration", () => {
     expect(res.body.error.code).toBe("INVALID_PASSWORD");
   });
 
-  it("should return 400 if email is already in use", async () => {
+  it("should return 409 if email is already in use", async () => {
     jwtService.verifyToken.mockReturnValue({ email: "test@example.com" });
     validationUtils.validateUsername.mockReturnValue(true);
     validationUtils.validatePassword.mockReturnValue(true);
@@ -148,12 +148,12 @@ describe("AuthController - completeRegistration", () => {
         password: "Password123!",
       });
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(409);
     expect(res.body.message).toBe("Email already in use.");
     expect(res.body.error.code).toBe("EMAIL_IN_USE");
   });
 
-  it("should return 400 if username is already in use", async () => {
+  it("should return 409 if username is already in use", async () => {
     jwtService.verifyToken.mockReturnValue({ email: "test@example.com" });
     validationUtils.validateUsername.mockReturnValue(true);
     validationUtils.validatePassword.mockReturnValue(true);
@@ -168,7 +168,7 @@ describe("AuthController - completeRegistration", () => {
         password: "Password123!",
       });
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(409);
     expect(res.body.message).toBe("Username already in use.");
     expect(res.body.error.code).toBe("USERNAME_IN_USE");
   });

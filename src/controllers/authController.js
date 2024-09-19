@@ -87,13 +87,13 @@ const completeRegistration = async (req, res) => {
   // Check if the email is already in use
   const existingEmail = await userService.getUserByEmail(email);
   if (existingEmail) {
-    return res.badRequest("Email already in use.", "EMAIL_IN_USE");
+    return res.conflict("Email already in use.", "EMAIL_IN_USE");
   }
 
   // Check if the username is already in use
   const existingUsername = await userService.getUserByUsername(username);
   if (existingUsername) {
-    return res.badRequest("Username already in use.", "USERNAME_IN_USE");
+    return res.conflict("Username already in use.", "USERNAME_IN_USE");
   }
 
   // Create the user
