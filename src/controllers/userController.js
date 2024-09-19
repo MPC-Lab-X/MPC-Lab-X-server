@@ -259,7 +259,7 @@ const updatePassword = async (req, res) => {
 
   // Check if the new password is valid
   if (!newPassword || !validationUtils.validatePassword(newPassword)) {
-    return res.badRequest("Invalid new password.", "INVALID_PASSWORD");
+    return res.badRequest("Invalid new password.", "INVALID_NEW_PASSWORD");
   }
 
   // Check if user exists
@@ -271,12 +271,12 @@ const updatePassword = async (req, res) => {
   // Check if current password is correct
   const isMatch = await verifyPassword(currentPassword, user.password);
   if (!isMatch) {
-    return res.unauthorized("Invalid password.", "INVALID_PASSWORD");
+    return res.unauthorized("Incorrect password.", "INCORRECT_PASSWORD");
   }
 
   // Update password
   try {
-    const updatedUser = await userService.updateUserById(user._id, {
+    await userService.updateUserById(user._id, {
       password: newPassword,
     });
     return res.success(null, "Password updated successfully.");

@@ -431,7 +431,7 @@ describe("UserController - updatePassword", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("Invalid new password.");
-    expect(res.body.error.code).toBe("INVALID_PASSWORD");
+    expect(res.body.error.code).toBe("INVALID_NEW_PASSWORD");
   });
 
   it("should return 404 if user is not found", async () => {
@@ -458,8 +458,8 @@ describe("UserController - updatePassword", () => {
     });
 
     expect(res.status).toBe(401);
-    expect(res.body.message).toBe("Invalid password.");
-    expect(res.body.error.code).toBe("INVALID_PASSWORD");
+    expect(res.body.message).toBe("Incorrect password.");
+    expect(res.body.error.code).toBe("INCORRECT_PASSWORD");
   });
 
   it("should return 200 and update the password if valid", async () => {
