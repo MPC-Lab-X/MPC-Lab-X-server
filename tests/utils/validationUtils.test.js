@@ -11,6 +11,7 @@ const {
   validateIdentifier,
   validateLimit,
   validateOffset,
+  validateClassCode,
 } = require("../../src/utils/validationUtils");
 
 describe("validateEmail", () => {
@@ -247,5 +248,43 @@ describe("validateOffset", () => {
 
   test("should return false for an offset that is undefined", () => {
     expect(validateOffset(undefined)).toBe(false);
+  });
+});
+
+describe("validateClassCode", () => {
+  test("should return false for an empty class code", () => {
+    expect(validateClassCode("")).toBe(false);
+  });
+
+  test("should return false for a class code shorter than 6 characters", () => {
+    expect(validateClassCode("ABC12")).toBe(false);
+  });
+
+  test("should return false for a class code longer than 6 characters", () => {
+    expect(validateClassCode("ABC1234")).toBe(false);
+  });
+
+  test("should return false for a class code with lowercase letters", () => {
+    expect(validateClassCode("abc123")).toBe(false);
+  });
+
+  test("should return false for a class code with special characters", () => {
+    expect(validateClassCode("ABC!@#")).toBe(false);
+  });
+
+  test("should return true for a valid class code with uppercase letters and numbers", () => {
+    expect(validateClassCode("ABC123")).toBe(true);
+  });
+
+  test("should return false for a class code with spaces", () => {
+    expect(validateClassCode("ABC 123")).toBe(false);
+  });
+
+  test("should return false for a class code that is null", () => {
+    expect(validateClassCode(null)).toBe(false);
+  });
+
+  test("should return false for a class code that is undefined", () => {
+    expect(validateClassCode(undefined)).toBe(false);
   });
 });
