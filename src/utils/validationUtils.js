@@ -7,6 +7,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Check
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])[^\s]{8,}$/; // Check if the password is valid (at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character)
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,}$/; // Check if the username is valid (at least 3 characters, alphanumeric characters and underscores only)
 const DISPLAY_NAME_REGEX = /^(?!.*\s{2,})[^\s](.{0,18}[^\s])?$|^$/; // Check if the display name is valid (no more than 20 characters, no leading or trailing spaces, no consecutive spaces)
+const CLASS_CODE_REGEX = /^[A-Z0-9]{6}$/; // Check if the class code is valid (exactly 6 characters, uppercase letters and numbers only)
 
 /**
  * @function validateEmail - Validate an email address.
@@ -98,6 +99,15 @@ const validateOffset = (offset) => {
   return !isNaN(offset) && parseInt(offset) >= 0;
 };
 
+/**
+ * @function validateClassCode - Validate a class code.
+ * @param {string} classCode - The class code to validate.
+ * @returns {boolean} - True if the class code is valid, false otherwise.
+ */
+const validateClassCode = (classCode) => {
+  return CLASS_CODE_REGEX.test(classCode);
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
@@ -106,4 +116,5 @@ module.exports = {
   validateIdentifier,
   validateLimit,
   validateOffset,
+  validateClassCode,
 };
