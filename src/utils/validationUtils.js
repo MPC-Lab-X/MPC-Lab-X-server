@@ -8,6 +8,8 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])[^\s]{8,}$/; /
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,}$/; // Check if the username is valid (at least 3 characters, alphanumeric characters and underscores only)
 const DISPLAY_NAME_REGEX = /^(?!.*\s{2,})[^\s](.{0,18}[^\s])?$|^$/; // Check if the display name is valid (no more than 20 characters, no leading or trailing spaces, no consecutive spaces)
 const CLASS_CODE_REGEX = /^[A-Z0-9]{6}$/; // Check if the class code is valid (exactly 6 characters, uppercase letters and numbers only)
+const CLASS_NAME_REGEX = /^[a-zA-Z0-9\s]{1,50}$/; // Check if the class name is valid (at least 1 character, alphanumeric characters and spaces only)
+const STUDENT_NAME_REGEX = /^[a-zA-Z\s]{1,50}$/; // Check if the student name is valid (at least 1 character, alphabetic characters and spaces only)
 
 /**
  * @function validateEmail - Validate an email address.
@@ -105,7 +107,43 @@ const validateOffset = (offset) => {
  * @returns {boolean} - True if the class code is valid, false otherwise.
  */
 const validateClassCode = (classCode) => {
-  return CLASS_CODE_REGEX.test(classCode);
+  if (!classCode) {
+    // Check if the class code is empty
+    return false;
+  } else {
+    // Check if the class code matches the regex pattern
+    return CLASS_CODE_REGEX.test(classCode);
+  }
+};
+
+/**
+ * @function validateClassName - Validate a class name.
+ * @param {string} className - The class name to validate.
+ * @returns {boolean} - True if the class name is valid, false otherwise.
+ */
+const validateClassName = (className) => {
+  if (!className) {
+    // Check if the class name is empty
+    return false;
+  } else {
+    // Check if the class name matches the regex pattern
+    return CLASS_NAME_REGEX.test(className);
+  }
+};
+
+/**
+ * @function validateStudentName - Validate a student name.
+ * @param {string} studentName - The student name to validate.
+ * @returns {boolean} - True if the student name is valid, false otherwise.
+ */
+const validateStudentName = (studentName) => {
+  if (!studentName) {
+    // Check if the student name is empty
+    return false;
+  } else {
+    // Check if the student name matches the regex pattern
+    return STUDENT_NAME_REGEX.test(studentName);
+  }
 };
 
 module.exports = {
@@ -117,4 +155,6 @@ module.exports = {
   validateLimit,
   validateOffset,
   validateClassCode,
+  validateClassName,
+  validateStudentName,
 };
