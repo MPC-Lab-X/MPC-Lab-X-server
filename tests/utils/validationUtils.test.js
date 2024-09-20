@@ -12,6 +12,8 @@ const {
   validateLimit,
   validateOffset,
   validateClassCode,
+  validateClassName,
+  validateStudentName,
 } = require("../../src/utils/validationUtils");
 
 describe("validateEmail", () => {
@@ -286,5 +288,65 @@ describe("validateClassCode", () => {
 
   test("should return false for a class code that is undefined", () => {
     expect(validateClassCode(undefined)).toBe(false);
+  });
+});
+
+describe("validateClassName", () => {
+  test("should return false for an empty class name", () => {
+    expect(validateClassName("")).toBe(false);
+  });
+
+  test("should return false for a class name longer than 50 characters", () => {
+    expect(validateClassName("a".repeat(51))).toBe(false);
+  });
+
+  test("should return false for a class name with special characters", () => {
+    expect(validateClassName("Class@Name!")).toBe(false);
+  });
+
+  test("should return true for a valid class name with alphanumeric characters", () => {
+    expect(validateClassName("ClassName123")).toBe(true);
+  });
+
+  test("should return true for a valid class name with spaces", () => {
+    expect(validateClassName("Class Name")).toBe(true);
+  });
+
+  test("should return false for a class name that is null", () => {
+    expect(validateClassName(null)).toBe(false);
+  });
+
+  test("should return false for a class name that is undefined", () => {
+    expect(validateClassName(undefined)).toBe(false);
+  });
+});
+
+describe("validateStudentName", () => {
+  test("should return false for an empty student name", () => {
+    expect(validateStudentName("")).toBe(false);
+  });
+
+  test("should return false for a student name longer than 50 characters", () => {
+    expect(validateStudentName("a".repeat(51))).toBe(false);
+  });
+
+  test("should return false for a student name with special characters", () => {
+    expect(validateStudentName("Student@Name!")).toBe(false);
+  });
+
+  test("should return true for a valid student name with alphabetic characters", () => {
+    expect(validateStudentName("StudentName")).toBe(true);
+  });
+
+  test("should return true for a valid student name with spaces", () => {
+    expect(validateStudentName("Student Name")).toBe(true);
+  });
+
+  test("should return false for a student name that is null", () => {
+    expect(validateStudentName(null)).toBe(false);
+  });
+
+  test("should return false for a student name that is undefined", () => {
+    expect(validateStudentName(undefined)).toBe(false);
   });
 });
