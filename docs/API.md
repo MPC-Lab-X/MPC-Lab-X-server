@@ -25,6 +25,17 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
   - [Update Email](#update-email)
   - [Complete Email Update](#complete-email-update)
   - [Update Password](#update-password)
+- [Class Endpoints](#class-endpoints)
+  - [Create Class](#create-class)
+  - [Delete Class](#delete-class)
+  - [Rename Class](#rename-class)
+  - [Get Classes](#get-classes)
+  - [Get Class](#get-class)
+  - [Add Admin](#add-admin)
+  - [Remove Admin](#remove-admin)
+  - [Add Student](#add-student)
+  - [Rename Student](#rename-student)
+  - [Delete Student](#delete-student)
 
 ### Authentication Endpoints
 
@@ -1138,3 +1149,851 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
     ```
 
 > **Note:** The endpoint is protected, and the user must be authenticated to access it. The user can only update their own password.
+
+### Class Endpoints
+
+#### Create Class
+
+- **URL:** `/api/classes`
+- **Method:** `POST`
+
+- **Request Body**:
+
+  ```json
+  {
+    "className": "class_name"
+  }
+  ```
+
+  > **Note:** The name of the class to create.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Class created successfully."
+    }
+    ```
+
+    > **Note:** The created class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class name.",
+      "error": {
+        "code": "INVALID_CLASS_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error creating class.",
+      "error": {
+        "code": "CREATE_CLASS_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Delete Class
+
+- **URL:** `/api/classes/:id`
+- **Method:** `DELETE`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to delete.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": null,
+      "message": "Class deleted successfully."
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to delete this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error deleting class.",
+      "error": {
+        "code": "DELETE_CLASS_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Rename Class
+
+- **URL:** `/api/classes/:id/name`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to rename.
+
+- **Request Body**:
+
+  ```json
+  {
+    "className": "new_class_name"
+  }
+  ```
+
+  > **Note:** The new name of the class.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Class renamed successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class name.",
+      "error": {
+        "code": "INVALID_CLASS_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to rename this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error renaming class.",
+      "error": {
+        "code": "RENAME_CLASS_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Get Classes
+
+- **URL:** `/api/classes`
+- **Method:** `GET`
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": [],
+      "message": "Classes found successfully."
+    }
+    ```
+
+    > **Note:** The classes will be returned in the response (`data` field).
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error getting classes.",
+      "error": {
+        "code": "GET_CLASSES_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Get Class
+
+- **URL:** `/api/classes/:id`
+- **Method:** `GET`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to get.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Class found successfully."
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to view this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error getting class.",
+      "error": {
+        "code": "GET_CLASS_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Add Admin
+
+- **URL:** `/api/classes/:id/admins`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to add an admin to.
+
+- **Request Body**:
+
+  ```json
+  {
+    "userId": "user_id"
+  }
+  ```
+
+  > **Note:** The ID of the user to add as an admin.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Admin added successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "User not found.",
+      "error": {
+        "code": "USER_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to add an admin to this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error adding admin.",
+      "error": {
+        "code": "ADD_ADMIN_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Remove Admin
+
+- **URL:** `/api/classes/:id/admins`
+- **Method:** `DELETE`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to remove an admin from.
+
+- **Request Body**:
+
+  ```json
+  {
+    "userId": "user_id"
+  }
+  ```
+
+  > **Note:** The ID of the user to remove as an admin.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Admin removed successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "User not found.",
+      "error": {
+        "code": "USER_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to remove an admin from this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error removing admin.",
+      "error": {
+        "code": "REMOVE_ADMIN_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Add Student
+
+- **URL:** `/api/classes/:id/students`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to add a student to.
+
+- **Request Body**:
+
+  ```json
+  {
+    "name": "student_name"
+  }
+  ```
+
+  > **Note:** The name of the student to add.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Student added successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid student name.",
+      "error": {
+        "code": "INVALID_STUDENT_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to add a student to this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error adding student.",
+      "error": {
+        "code": "ADD_STUDENT_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Rename Student
+
+- **URL:** `/api/classes/:id/students/:studentNumber`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to rename a student in.
+  - `studentNumber`: The student number of the student to rename.
+
+- **Request Body**:
+
+  ```json
+  {
+    "name": "new_student_name"
+  }
+  ```
+
+  > **Note:** The new name of the student.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Student renamed successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid student number.",
+      "error": {
+        "code": "INVALID_STUDENT_NUMBER",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid student name.",
+      "error": {
+        "code": "INVALID_STUDENT_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to rename this student.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error renaming student.",
+      "error": {
+        "code": "RENAME_STUDENT_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Delete Student
+
+- **URL:** `/api/classes/:id/students/:studentNumber`
+- **Method:** `DELETE`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the class to delete a student from.
+  - `studentNumber`: The student number of the student to delete.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Student deleted successfully."
+    }
+    ```
+
+    > **Note:** The updated class data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid student number.",
+      "error": {
+        "code": "INVALID_STUDENT_NUMBER",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to delete a student from this class.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error deleting student.",
+      "error": {
+        "code": "DELETE_STUDENT_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
