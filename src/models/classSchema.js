@@ -11,7 +11,6 @@ const studentSchema = new mongoose.Schema(
     studentNumber: {
       type: Number,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
@@ -73,6 +72,26 @@ classSchema.pre("save", function (next) {
     this._id = code;
   }
   next();
+});
+
+// Index the teacher field
+classSchema.index({ teacher: 1 });
+
+// Index the admins field
+classSchema.index({ admins: 1 });
+
+// Index the students field (compound index with studentNumber)
+classSchema.index(
+  { classId: 1, "students.studentNumber": 1 },
+  { unique: true }
+);
+
+// Delete the deleted field from the class object when converting to JSON
+classSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.deleted;
+    return ret;
+  },
 });
 
 // Create the class model
