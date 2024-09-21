@@ -4,6 +4,7 @@
  */
 
 const classService = require("../services/classService");
+const userService = require("../services/userService");
 
 const validationUtils = require("../utils/validationUtils");
 
@@ -203,8 +204,9 @@ const addAdmin = async (req, res) => {
   }
 
   // Check if user ID is valid
-  if (!validationUtils.validateUserId(userId)) {
-    return res.badRequest("Invalid user ID.", "INVALID_USER_ID");
+  const user = await userService.getUserById(userId);
+  if (!user) {
+    return res.notFound("User not found.", "USER_NOT_FOUND");
   }
 
   // Get class by ID
@@ -246,8 +248,9 @@ const removeAdmin = async (req, res) => {
   }
 
   // Check if user ID is valid
-  if (!validationUtils.validateUserId(userId)) {
-    return res.badRequest("Invalid user ID.", "INVALID_USER_ID");
+  const user = await userService.getUserById(userId);
+  if (!user) {
+    return res.notFound("User not found.", "USER_NOT_FOUND");
   }
 
   // Get class by ID
@@ -359,8 +362,8 @@ const renameStudent = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      (classData.teacher.toString() !== userId,
-      !classData.admins.includes(userId))
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
     ) {
       return res.forbidden(
         "You are not authorized to rename a student in this class.",
