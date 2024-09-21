@@ -13,6 +13,7 @@ const {
   validateOffset,
   validateClassCode,
   validateClassName,
+  validateStudentNumber,
   validateStudentName,
 } = require("../../src/utils/validationUtils");
 
@@ -318,6 +319,32 @@ describe("validateClassName", () => {
 
   test("should return false for a class name that is undefined", () => {
     expect(validateClassName(undefined)).toBe(false);
+  });
+});
+
+describe("validateStudentNumber", () => {
+  test("should return false for a non-numeric student number", () => {
+    expect(validateStudentNumber("abc")).toBe(false);
+  });
+
+  test("should return false for a negative student number", () => {
+    expect(validateStudentNumber(-1)).toBe(false);
+  });
+
+  test("should return false for a student number of zero", () => {
+    expect(validateStudentNumber(0)).toBe(false);
+  });
+
+  test("should return true for a positive student number", () => {
+    expect(validateStudentNumber(12345)).toBe(true);
+  });
+
+  test("should return false for a student number that is null", () => {
+    expect(validateStudentNumber(null)).toBe(false);
+  });
+
+  test("should return false for a student number that is undefined", () => {
+    expect(validateStudentNumber(undefined)).toBe(false);
   });
 });
 
