@@ -40,6 +40,29 @@ const getClass = async (classId) => {
 };
 
 /**
+ * @function getClasses - Get all classes by user ID (teacher or admin).
+ * @param {string} userId - The user ID.
+ * @returns {Promise<Array>} The array of class objects.
+ * @throws {Error} Throws an error if the classes fail to retrieve.
+ */
+const getClasses = async (userId) => {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new Error("Invalid user ID");
+  }
+
+  try {
+    const classes = await Class.find({
+      $or: [{ teacher: userId }, { admins: userId }],
+      deleted: false,
+    });
+    return classes;
+  } catch (error) {
+    console.error("Error in getting classes: ", error);
+    throw error;
+  }
+};
+
+/**
  * @function renameClass - Rename a class.
  * @param {string} classId - The class ID.
  * @param {string} name - The new class name.
@@ -208,6 +231,7 @@ const deleteClass = async (classId) => {
 module.exports = {
   createClass,
   getClass,
+  getClasses,
   renameClass,
   addAdmin,
   removeAdmin,

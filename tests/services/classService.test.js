@@ -70,6 +70,63 @@ describe("Class Service", () => {
     });
   });
 
+  describe("getClasses", () => {
+    it("should retrieve all classes for a given teacher ID", async () => {
+      const teacherId = new mongoose.Types.ObjectId();
+      const classData1 = {
+        name: "Math 101",
+        teacher: teacherId,
+        admins: [new mongoose.Types.ObjectId()],
+      };
+      const classData2 = {
+        name: "Science 101",
+        teacher: teacherId,
+        admins: [new mongoose.Types.ObjectId()],
+      };
+      await classService.createClass(classData1);
+      await classService.createClass(classData2);
+
+      const classes = await classService.getClasses(teacherId);
+      expect(classes).toHaveLength(2);
+      expect(classes[0].teacher).toEqual(teacherId);
+      expect(classes[1].teacher).toEqual(teacherId);
+    });
+
+    it("should retrieve all classes for a given admin ID", async () => {
+      const adminId = new mongoose.Types.ObjectId();
+      const classData1 = {
+        name: "Math 101",
+        teacher: new mongoose.Types.ObjectId(),
+        admins: [adminId],
+      };
+      const classData2 = {
+        name: "Science 101",
+        teacher: new mongoose.Types.ObjectId(),
+        admins: [adminId],
+      };
+      await classService.createClass(classData1);
+      await classService.createClass(classData2);
+
+      const classes = await classService.getClasses(adminId);
+      expect(classes).toHaveLength(2);
+      expect(classes[0].admins).toContainEqual(adminId);
+      expect(classes[1].admins).toContainEqual(adminId);
+    });
+
+    it("should return an empty array if no classes exist for the given teacher ID", async () => {
+      const teacherId = new mongoose.Types.ObjectId();
+      const classes = await classService.getClasses(teacherId);
+      expect(classes).toHaveLength(0);
+    });
+
+    it("should throw an error if the teacher ID is invalid", async () => {
+      const invalidTeacherId = "invalidTeacherId";
+      await expect(classService.getClasses(invalidTeacherId)).rejects.toThrow(
+        "Invalid user ID"
+      );
+    });
+  });
+
   describe("renameClass", () => {
     it("should rename a class successfully", async () => {
       const classData = {
