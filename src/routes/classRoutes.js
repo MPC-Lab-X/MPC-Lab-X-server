@@ -12,6 +12,7 @@ router.post("/", classController.createClass);
 router.delete("/:id", classController.deleteClass);
 router.put("/:id/name", classController.renameClass);
 
+router.get("/", classController.getClasses);
 router.get("/:id", classController.getClass);
 
 router.put("/:id/admins", classController.addAdmin);

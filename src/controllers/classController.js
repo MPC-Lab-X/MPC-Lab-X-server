@@ -130,6 +130,26 @@ const renameClass = async (req, res) => {
 };
 
 /**
+ * @function getClasses - Get all classes by user ID (teacher or admin).
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+const getClasses = async (req, res) => {
+  const userId = req.user.userId;
+
+  // Get classes by user ID
+  try {
+    const classes = await classService.getClasses(userId);
+    return res.success(classes, "Classes retrieved successfully.");
+  } catch (error) {
+    return res.internalServerError(
+      "Error getting classes.",
+      "GET_CLASSES_ERROR"
+    );
+  }
+};
+
+/**
  * @function getClass - Get a class by ID.
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
@@ -418,6 +438,7 @@ module.exports = {
   createClass,
   deleteClass,
   renameClass,
+  getClasses,
   getClass,
   addAdmin,
   removeAdmin,
