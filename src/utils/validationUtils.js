@@ -132,6 +132,15 @@ const validateClassName = (className) => {
 };
 
 /**
+ * @function validateStudentNumber - Validate a student number.
+ * @param {number} studentNumber - The student number to validate.
+ * @returns {boolean} - True if the student number is valid, false otherwise.
+ */
+const validateStudentNumber = (studentNumber) => {
+  return !isNaN(studentNumber) && studentNumber > 0;
+};
+
+/**
  * @function validateStudentName - Validate a student name.
  * @param {string} studentName - The student name to validate.
  * @returns {boolean} - True if the student name is valid, false otherwise.
@@ -156,5 +165,6 @@ module.exports = {
   validateOffset,
   validateClassCode,
   validateClassName,
+  validateStudentNumber,
   validateStudentName,
 };
