@@ -111,13 +111,15 @@ const removeAdmin = async (classId, userId) => {
 /**
  * @function addStudent - Add a student to a class.
  * @param {string} classId - The class ID.
- * @param {Object} studentNumber - The student number.
  * @param {string} name - The student name.
  * @returns {Promise<Object>} The updated class object.
  * @throws {Error} Throws an error if the student fails to add.
  */
-const addStudent = async (classId, studentNumber, name) => {
+const addStudent = async (classId, name) => {
   try {
+    const studentNumber =
+      (await Class.findOne({ _id: classId }))?.students?.length + 1 || 1;
+
     const updatedClass = await Class.findOneAndUpdate(
       { _id: classId, deleted: false },
       { $addToSet: { students: { studentNumber, name } } },

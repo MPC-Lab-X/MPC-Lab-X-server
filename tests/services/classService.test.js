@@ -182,30 +182,27 @@ describe("Class Service", () => {
         students: [],
       };
       const newClass = await classService.createClass(classData);
-      const studentNumber = 12345;
       const studentName = "John Doe";
       const updatedClass = await classService.addStudent(
         newClass._id,
-        studentNumber,
         studentName
       );
       expect(updatedClass).toBeDefined();
+      expect(updatedClass.students).toHaveLength(1);
       expect(updatedClass.students).toContainEqual(
         expect.objectContaining({
           deleted: false,
-          studentNumber,
           name: studentName,
         })
       );
+      expect(updatedClass.students[0].studentNumber).toBe(1);
     });
 
     it("should return null if class does not exist", async () => {
       const nonExistentClassId = new mongoose.Types.ObjectId();
-      const studentNumber = 12345;
       const studentName = "John Doe";
       const result = await classService.addStudent(
         nonExistentClassId,
-        studentNumber,
         studentName
       );
       expect(result).toBeNull();
