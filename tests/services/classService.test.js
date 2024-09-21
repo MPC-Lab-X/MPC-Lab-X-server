@@ -304,9 +304,9 @@ describe("Class Service", () => {
         students: [{ studentNumber: 12345, name: "Alice Doe" }],
       };
       const newClass = await classService.createClass(classData);
-      const deletedClass = await classService.deleteClass(newClass._id);
-      expect(deletedClass).toBeDefined();
-      expect(deletedClass.deleted).toBe(true);
+      const deleted = await classService.deleteClass(newClass._id);
+      expect(deleted).toBeDefined();
+      expect(deleted).toBe(true);
     });
 
     it("should return null if class does not exist", async () => {

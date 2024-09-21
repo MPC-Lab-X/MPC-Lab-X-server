@@ -31,7 +31,7 @@ const createClass = async (classData) => {
  */
 const getClass = async (classId) => {
   try {
-    const classData = await Class.findById(classId);
+    const classData = await Class.findOne({ _id: classId, deleted: false });
     return classData;
   } catch (error) {
     console.error("Error in getting class: ", error);
@@ -48,8 +48,8 @@ const getClass = async (classId) => {
  */
 const renameClass = async (classId, name) => {
   try {
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { name },
       { new: true }
     );
@@ -72,8 +72,8 @@ const addAdmin = async (classId, userId) => {
     throw new Error("Invalid user ID");
 
   try {
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { $addToSet: { admins: userId } },
       { new: true }
     );
@@ -96,8 +96,8 @@ const removeAdmin = async (classId, userId) => {
     throw new Error("Invalid user ID");
 
   try {
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { $pull: { admins: userId } },
       { new: true }
     );
@@ -118,8 +118,8 @@ const removeAdmin = async (classId, userId) => {
  */
 const addStudent = async (classId, studentNumber, name) => {
   try {
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { $addToSet: { students: { studentNumber, name } } },
       { new: true }
     );
@@ -143,6 +143,7 @@ const renameStudent = async (classId, studentNumber, name) => {
     const updatedClass = await Class.findOneAndUpdate(
       {
         _id: classId,
+        deleted: false,
         "students.studentNumber": studentNumber,
       },
       { $set: { "students.$.name": name } },
@@ -164,8 +165,8 @@ const renameStudent = async (classId, studentNumber, name) => {
  */
 const deleteStudent = async (classId, studentNumber) => {
   try {
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { $set: { "students.$[elem].deleted": true } },
       {
         arrayFilters: [{ "elem.studentNumber": studentNumber }],
@@ -187,11 +188,14 @@ const deleteStudent = async (classId, studentNumber) => {
  */
 const deleteClass = async (classId) => {
   try {
-    const deletedClass = await Class.findByIdAndUpdate(
-      classId,
+    const deletedClass = await Class.findOneAndUpdate(
+      { _id: classId, deleted: false },
       { deleted: true },
-      { new: true }
+      { new: false }
     );
+    if (deletedClass !== null) {
+      return true;
+    }
     return deletedClass;
   } catch (error) {
     console.error("Error in deleting class: ", error);
