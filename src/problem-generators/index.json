@@ -58,6 +58,54 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "withFractions": {
+                                "name": "With Fractions",
+                                "description": "Problems involving linear equations with fractions (ax/b = c).",
+                                "parameters": {
+                                    "minCoefficient": {
+                                        "type": "number",
+                                        "description": "The minimum value for the coefficient a.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxCoefficient": {
+                                        "type": "number",
+                                        "description": "The maximum value for the coefficient a.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minDenominator": {
+                                        "type": "number",
+                                        "description": "The minimum value for the denominator(b) of the fraction.",
+                                        "default": 2,
+                                        "min": 2,
+                                        "max": 10000
+                                    },
+                                    "maxDenominator": {
+                                        "type": "number",
+                                        "description": "The maximum value for the denominator(b) of the fraction.",
+                                        "default": 10,
+                                        "min": 2,
+                                        "max": 10000
+                                    },
+                                    "minSolution": {
+                                        "type": "number",
+                                        "description": "The minimum value for the solution c.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxSolution": {
+                                        "type": "number",
+                                        "description": "The maximum value for the solution c.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    }
+                                }
                             }
                         }
                     }
