@@ -202,6 +202,50 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "slopeInterceptForm": {
+                                "name": "Slope-Intercept Form",
+                                "description": "Problems involving linear equations in slope-intercept form (y = mx + b), solving for slope and y-intercept.",
+                                "parameters": {
+                                    "isMCQ": {
+                                        "type": "boolean",
+                                        "description": "Whether the problem is multiple choice.",
+                                        "default": true
+                                    },
+                                    "isSimplified": {
+                                        "type": "boolean",
+                                        "description": "Whether the problem is simplified.",
+                                        "default": false
+                                    },
+                                    "minSlope": {
+                                        "type": "number",
+                                        "description": "The minimum value for the slope m.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxSlope": {
+                                        "type": "number",
+                                        "description": "The maximum value for the slope m.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minYIntercept": {
+                                        "type": "number",
+                                        "description": "The minimum value for the y-intercept b.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxYIntercept": {
+                                        "type": "number",
+                                        "description": "The maximum value for the y-intercept b.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    }
+                                }
                             }
                         }
                     }
