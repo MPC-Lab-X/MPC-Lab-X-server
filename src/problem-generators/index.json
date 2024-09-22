@@ -106,6 +106,54 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "withParentheses": {
+                                "name": "With Parentheses",
+                                "description": "Problems involving linear equations with parentheses (a(x + b) = c).",
+                                "parameters": {
+                                    "minCoefficient": {
+                                        "type": "number",
+                                        "description": "The minimum value for the coefficient a.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxCoefficient": {
+                                        "type": "number",
+                                        "description": "The maximum value for the coefficient a.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minConstant": {
+                                        "type": "number",
+                                        "description": "The minimum value for the constant b.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxConstant": {
+                                        "type": "number",
+                                        "description": "The maximum value for the constant b.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minSolution": {
+                                        "type": "number",
+                                        "description": "The minimum value for the solution c.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxSolution": {
+                                        "type": "number",
+                                        "description": "The maximum value for the solution c.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    }
+                                }
                             }
                         }
                     }
