@@ -154,6 +154,54 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "withAbsoluteValue": {
+                                "name": "With Absolute Value",
+                                "description": "Problems involving linear equations with absolute value (|ax + b| = c).",
+                                "parameters": {
+                                    "minCoefficient": {
+                                        "type": "number",
+                                        "description": "The minimum value for the coefficient a.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxCoefficient": {
+                                        "type": "number",
+                                        "description": "The maximum value for the coefficient a.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minConstant": {
+                                        "type": "number",
+                                        "description": "The minimum value for the constant b.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxConstant": {
+                                        "type": "number",
+                                        "description": "The maximum value for the constant b.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minSolution": {
+                                        "type": "number",
+                                        "description": "The minimum value for the solution c.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxSolution": {
+                                        "type": "number",
+                                        "description": "The maximum value for the solution c.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    }
+                                }
                             }
                         }
                     }
