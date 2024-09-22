@@ -246,6 +246,50 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "pointSlopeForm": {
+                                "name": "Point-Slope Form",
+                                "description": "Problems involving linear equations in point-slope form (y - y1 = m(x - x1)), solving for slope and (x1, y1).",
+                                "parameters": {
+                                    "isMCQ": {
+                                        "type": "boolean",
+                                        "description": "Whether the problem is multiple choice.",
+                                        "default": true
+                                    },
+                                    "isSimplified": {
+                                        "type": "boolean",
+                                        "description": "Whether the problem is simplified.",
+                                        "default": false
+                                    },
+                                    "minSlope": {
+                                        "type": "number",
+                                        "description": "The minimum value for the slope m.",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxSlope": {
+                                        "type": "number",
+                                        "description": "The maximum value for the slope m.",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "minPoint": {
+                                        "type": "number",
+                                        "description": "The minimum value for the point (x1, y1).",
+                                        "default": -20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    },
+                                    "maxPoint": {
+                                        "type": "number",
+                                        "description": "The maximum value for the point (x1, y1).",
+                                        "default": 20,
+                                        "min": -10000,
+                                        "max": 10000
+                                    }
+                                }
                             }
                         }
                     }
