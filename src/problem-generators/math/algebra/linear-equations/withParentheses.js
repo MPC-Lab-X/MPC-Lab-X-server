@@ -64,17 +64,18 @@ const generateProblem = (options) => {
     value: `${x} = ${simplifiedString}`,
   });
 
+  const solution = [
+    {
+      type: "numeric",
+      decimal: math.evaluate(math.format(simplified)),
+      fraction: simplifiedFraction.d === 1 ? null : simplifiedFraction,
+    },
+  ];
+
   return {
     problem,
     steps,
-    solution: {
-      type: "numeric",
-      decimal: math.evaluate(math.format(simplified)),
-      fraction:
-        simplifiedFraction.d === 1
-          ? null
-          : [simplifiedFraction.n, simplifiedFraction.d],
-    },
+    solution,
   };
 };
 

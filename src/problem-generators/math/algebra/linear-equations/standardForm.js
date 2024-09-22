@@ -57,13 +57,17 @@ const generateProblem = (options) => {
 
   steps.push({ type: "formula", value: `${x} = ${math.format(simplified)}` });
 
-  return {
-    problem,
-    steps,
-    solution: {
+  const solution = [
+    {
       type: "numeric",
       decimal: math.evaluate(math.format(simplified)),
     },
+  ];
+
+  return {
+    problem,
+    steps,
+    solution,
   };
 };
 
