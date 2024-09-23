@@ -24,4 +24,13 @@ const randomVariable = (isUpperCase = false) => {
   return String.fromCharCode(randomInt(min, max));
 };
 
-module.exports = { randomInt, randomVariable };
+/**
+ * @function randomElement - Get a random element from an array.
+ * @param {Array} array - The array to get a random element from.
+ * @returns {*} - A random element from the array.
+ */
+const randomElement = (array) => {
+  return array[randomInt(0, array.length - 1)];
+};
+
+module.exports = { randomInt, randomVariable, randomElement };
