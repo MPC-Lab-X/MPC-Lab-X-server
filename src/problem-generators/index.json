@@ -290,6 +290,27 @@
                                         "max": 10000
                                     }
                                 }
+                            },
+                            "graphingLinearEquations": {
+                                "name": "Graphing Linear Equations",
+                                "description": "Problems involving graphing linear equations. Given a linear equation, graph the line.",
+                                "parameters": {
+                                    "includeStandard": {
+                                        "type": "boolean",
+                                        "description": "Whether to include the standard form option.",
+                                        "default": true
+                                    },
+                                    "includeSlopeIntercept": {
+                                        "type": "boolean",
+                                        "description": "Whether to include the slope-intercept form option.",
+                                        "default": true
+                                    },
+                                    "includePointSlope": {
+                                        "type": "boolean",
+                                        "description": "Whether to include the point-slope form option.",
+                                        "default": true
+                                    }
+                                }
                             }
                         }
                     }
