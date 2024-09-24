@@ -15,6 +15,8 @@ const {
   validateClassName,
   validateStudentNumber,
   validateStudentName,
+  validateTaskName,
+  validateTaskDescription,
 } = require("../../src/utils/validationUtils");
 
 describe("validateEmail", () => {
@@ -375,5 +377,65 @@ describe("validateStudentName", () => {
 
   test("should return false for a student name that is undefined", () => {
     expect(validateStudentName(undefined)).toBe(false);
+  });
+});
+
+describe("validateTaskName", () => {
+  test("should return false for an empty task name", () => {
+    expect(validateTaskName("")).toBe(false);
+  });
+
+  test("should return false for a task name longer than 50 characters", () => {
+    expect(validateTaskName("a".repeat(51))).toBe(false);
+  });
+
+  test("should return false for a task name with special characters", () => {
+    expect(validateTaskName("Task@Name!")).toBe(false);
+  });
+
+  test("should return true for a valid task name with alphanumeric characters", () => {
+    expect(validateTaskName("TaskName123")).toBe(true);
+  });
+
+  test("should return true for a valid task name with spaces", () => {
+    expect(validateTaskName("Task Name")).toBe(true);
+  });
+
+  test("should return false for a task name that is null", () => {
+    expect(validateTaskName(null)).toBe(false);
+  });
+
+  test("should return false for a task name that is undefined", () => {
+    expect(validateTaskName(undefined)).toBe(false);
+  });
+});
+
+describe("validateTaskDescription", () => {
+  test("should return false for an empty task description", () => {
+    expect(validateTaskDescription("")).toBe(false);
+  });
+
+  test("should return false for a task description longer than 500 characters", () => {
+    expect(validateTaskDescription("a".repeat(501))).toBe(false);
+  });
+
+  test("should return false for a task description with special characters", () => {
+    expect(validateTaskDescription("Task@Description!")).toBe(false);
+  });
+
+  test("should return true for a valid task description with alphanumeric characters", () => {
+    expect(validateTaskDescription("TaskDescription123")).toBe(true);
+  });
+
+  test("should return true for a valid task description with spaces", () => {
+    expect(validateTaskDescription("Task Description")).toBe(true);
+  });
+
+  test("should return false for a task description that is null", () => {
+    expect(validateTaskDescription(null)).toBe(false);
+  });
+
+  test("should return false for a task description that is undefined", () => {
+    expect(validateTaskDescription(undefined)).toBe(false);
   });
 });
