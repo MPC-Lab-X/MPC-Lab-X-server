@@ -10,6 +10,8 @@ const DISPLAY_NAME_REGEX = /^(?!.*\s{2,})[^\s](.{0,18}[^\s])?$|^$/; // Check if 
 const CLASS_CODE_REGEX = /^[A-Z0-9]{6}$/; // Check if the class code is valid (exactly 6 characters, uppercase letters and numbers only)
 const CLASS_NAME_REGEX = /^[a-zA-Z0-9\s]{1,50}$/; // Check if the class name is valid (at least 1 character, alphanumeric characters and spaces only)
 const STUDENT_NAME_REGEX = /^[a-zA-Z\s]{1,50}$/; // Check if the student name is valid (at least 1 character, alphabetic characters and spaces only)
+const TASK_NAME_REGEX = /^[a-zA-Z0-9\s]{1,50}$/; // Check if the task name is valid (at least 1 character, alphanumeric characters and spaces only)
+const TASK_DESCRIPTION_REGEX = /^[a-zA-Z0-9\s]{1,500}$/; // Check if the task description is valid (at least 1 character, alphanumeric characters and spaces only)
 
 /**
  * @function validateEmail - Validate an email address.
@@ -155,6 +157,36 @@ const validateStudentName = (studentName) => {
   }
 };
 
+/**
+ * @function validateTaskName - Validate a task name.
+ * @param {string} taskName - The task name to validate.
+ * @returns {boolean} - True if the task name is valid, false otherwise.
+ */
+const validateTaskName = (taskName) => {
+  if (!taskName) {
+    // Check if the task name is empty
+    return false;
+  } else {
+    // Check if the task name matches the regex pattern
+    return TASK_NAME_REGEX.test(taskName);
+  }
+};
+
+/**
+ * @function validateTaskDescription - Validate a task description.
+ * @param {string} taskDescription - The task description to validate.
+ * @returns {boolean} - True if the task description is valid, false otherwise.
+ */
+const validateTaskDescription = (taskDescription) => {
+  if (!taskDescription) {
+    // Check if the task description is empty
+    return false;
+  } else {
+    // Check if the task description matches the regex pattern
+    return TASK_DESCRIPTION_REGEX.test(taskDescription);
+  }
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
@@ -167,4 +199,6 @@ module.exports = {
   validateClassName,
   validateStudentNumber,
   validateStudentName,
+  validateTaskName,
+  validateTaskDescription,
 };
