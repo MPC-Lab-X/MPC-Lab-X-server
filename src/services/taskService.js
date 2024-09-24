@@ -80,7 +80,37 @@ const getTaskProblems = async (taskId, studentNumber) => {
 
     return userTask.problems;
   } catch (error) {
-    throw new Error(`Failed to retrieve problems: ${error.message}`);
+    throw error;
+  }
+};
+
+/**
+ * @function updateGradingStatus - Update the grading status of a task.
+ * @param {string} taskId - The task ID.
+ * @param {number} studentNumber - The student number.
+ * @param {boolean} graded - The grading status.
+ * @returns {Promise<Object>} The updated task object.
+ */
+const updateGradingStatus = async (taskId, studentNumber, graded) => {
+  if (!mongoose.isValidObjectId(taskId)) return null;
+
+  try {
+    const task = await Task.findById(taskId);
+
+    if (!task) throw new Error("Task not found");
+
+    const userTask = task.userTasks.find(
+      (task) => task.studentNumber === studentNumber
+    );
+
+    if (!userTask) throw new Error("User task not found");
+
+    userTask.graded = graded;
+    const updatedTask = await task.save();
+
+    return updatedTask;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -107,7 +137,6 @@ const updateTaskName = async (taskId, name) => {
 
     return updatedTask;
   } catch (error) {
-    console.error("Error in updating task name: ", error);
     throw error;
   }
 };
@@ -135,7 +164,6 @@ const updateTaskDescription = async (taskId, description) => {
 
     return updatedTask;
   } catch (error) {
-    console.error("Error in updating task description: ", error);
     throw error;
   }
 };
@@ -158,7 +186,6 @@ const deleteTask = async (taskId) => {
 
     return deletedTask;
   } catch (error) {
-    console.error("Error in deleting task: ", error);
     throw error;
   }
 };
@@ -168,6 +195,7 @@ module.exports = {
   getTasks,
   getTask,
   getTaskProblems,
+  updateGradingStatus,
   updateTaskName,
   updateTaskDescription,
   deleteTask,
