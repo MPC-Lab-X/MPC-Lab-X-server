@@ -68,7 +68,9 @@ const getTaskProblems = async (taskId, studentNumber) => {
   if (!mongoose.isValidObjectId(taskId)) return null;
 
   try {
-    const task = await Task.findById(taskId).select("userTasks.problems");
+    const task = await Task.findById(taskId).select(
+      "userTasks.studentNumber userTasks.problems"
+    );
 
     if (!task) throw new Error("Task not found");
 
