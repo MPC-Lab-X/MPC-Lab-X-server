@@ -133,7 +133,7 @@ describe("Task Service", () => {
         userTasks: [
           {
             studentNumber: 1,
-            problems: ["Problem 1", "Problem 2"],
+            problems: '["Problem 1", "Problem 2"]',
           },
         ],
       };

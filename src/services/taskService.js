@@ -14,6 +14,12 @@ const Task = require("../models/taskSchema");
  */
 const createTask = async (taskData) => {
   try {
+    if (taskData.userTasks && taskData.userTasks.length > 0) {
+      for (const userTask of taskData.userTasks) {
+        userTask.problems = JSON.stringify(userTask.problems);
+      }
+    }
+
     const newTask = new Task(taskData);
     const savedTask = await newTask.save();
     return savedTask;
@@ -80,7 +86,7 @@ const getTaskProblems = async (taskId, studentNumber) => {
 
     if (!userTask) throw new Error("User task not found");
 
-    return userTask.problems;
+    return JSON.parse(userTask.problems);
   } catch (error) {
     throw error;
   }
