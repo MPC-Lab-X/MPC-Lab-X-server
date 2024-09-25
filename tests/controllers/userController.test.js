@@ -1,6 +1,6 @@
 /**
  * @file tests/controllers/userController.test.js
- * @description Tests for the user controller functions.
+ * @description Tests for the user controller.
  */
 
 const request = require("supertest");
