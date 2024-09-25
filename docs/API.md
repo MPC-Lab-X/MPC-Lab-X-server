@@ -36,6 +36,15 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
   - [Add Student](#add-student)
   - [Rename Student](#rename-student)
   - [Delete Student](#delete-student)
+- [Task Endpoints](#task-endpoints)
+  - [Create Task](#create-task)
+  - [Get Tasks](#get-tasks)
+  - [Get Task](#get-task)
+  - [Delete Task](#delete-task)
+  - [Get Task Problems](#get-task-problems)
+  - [Rename Task](#rename-task)
+  - [Update Description](#update-description)
+  - [Update Grading Status](#update-grading-status)
 
 ### Authentication Endpoints
 
@@ -1991,6 +2000,803 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
       "message": "Error deleting student.",
       "error": {
         "code": "DELETE_STUDENT_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+### Task Endpoints
+
+#### Create Task
+
+- **URL:** `/api/classes/:classId/tasks`
+- **Method:** `POST`
+
+- **Request Parameters**:
+
+  - `classId`: The ID of the class to create a task for.
+
+- **Request Body**:
+
+  ```json
+  {
+    "name": "Task Name",
+    "description": "Task Description",
+    "options": {
+      "isIndividualTask": true,
+      "topics": [
+        {
+          "path": ["algebra", "linearEquations", "oneVariable", "solving"],
+          "options": {
+            "count": 5,
+            "shuffle": "topics"
+          }
+        },
+        {
+          "path": ["geometry", "triangles", "area", "solving"],
+          "options": {
+            "count": 5,
+            "shuffle": "topics"
+          }
+        }
+      ],
+      "shuffle": "all"
+    }
+  }
+  ```
+
+  > **Note:** The `options` field specifies the problem generation options for the task.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "taskId": "60f7b3b7b9b3b40015f3b3b7"
+      },
+      "message": "Task created successfully."
+    }
+    ```
+
+    > **Note:** The ID of the created task will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid class ID.",
+      "error": {
+        "code": "INVALID_CLASS_ID",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid task name.",
+      "error": {
+        "code": "INVALID_TASK_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid task description.",
+      "error": {
+        "code": "INVALID_TASK_DESCRIPTION",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Options are required.",
+      "error": {
+        "code": "OPTIONS_REQUIRED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to create task.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in creating task.",
+      "error": {
+        "code": "TASK_CREATION_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Get Tasks
+
+- **URL:** `/api/classes/:classId/tasks`
+- **Method:** `GET`
+
+- **Request Parameters**:
+
+  - `classId`: The ID of the class to get tasks for.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": [
+        {
+          "_id": "60f7b3b7b9b3b40015f3b3b7",
+          "classId": "60f7b3b7b9b3b40015f3b3b6",
+          "name": "Task Name",
+          "description": "Task Description",
+          "createdAt": "2021-07-21T12:00:00.000Z",
+          "updatedAt": "2021-07-21T12:00:00.000Z"
+        }
+      ],
+      "message": "Tasks retrieved successfully."
+    }
+    ```
+
+    > **Note:** The array of tasks will be returned in the response (`data` field).
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to get tasks.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in retrieving tasks.",
+      "error": {
+        "code": "TASKS_RETRIEVAL_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Get Task
+
+- **URL:** `/api/tasks/:id`
+- **Method:** `GET`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to get.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "_id": "60f7b3b7b9b3b40015f3b3b7",
+        "classId": "60f7b3b7b9b3b40015f3b3b6",
+        "name": "Task Name",
+        "description": "Task Description",
+        "userTasks": [
+          {
+            "studentNumber": "123456",
+            "graded": false
+          }
+        ],
+        "createdAt": "2021-07-21T12:00:00.000Z",
+        "updatedAt": "2021-07-21T12:00:00.000Z"
+      },
+      "message": "Task retrieved successfully."
+    }
+    ```
+
+    > **Note:** The task data will be returned in the response (`data` field).
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Task not found.",
+      "error": {
+        "code": "TASK_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to get task.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in retrieving task.",
+      "error": {
+        "code": "TASK_RETRIEVAL_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Delete Task
+
+- **URL:** `/api/tasks/:id`
+- **Method:** `DELETE`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to delete.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Task deleted successfully."
+    }
+    ```
+
+    > **Note:** The updated task data will be returned in the response (`data` field).
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Task not found.",
+      "error": {
+        "code": "TASK_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to delete task.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in deleting task.",
+      "error": {
+        "code": "TASK_DELETION_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Get Task Problems
+
+- **URL:** `/api/tasks/:id/problems/:studentNumber`
+- **Method:** `GET`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to get problems for.
+  - `studentNumber`: The student number to get problems for.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": [
+        {
+          "problemId": "60f7b3b7b9b3b40015f3b3b8",
+          "problem": "2x + 3 = 7",
+          "solution": "x = 2"
+        }
+      ],
+      "message": "Problems retrieved successfully."
+    }
+    ```
+
+    > **Note:** The problems data will be returned in the response (`data` field).
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Problems not found.",
+      "error": {
+        "code": "PROBLEMS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to get problems.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in retrieving problems.",
+      "error": {
+        "code": "PROBLEMS_RETRIEVAL_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Rename Task
+
+- **URL:** `/api/tasks/:id/name`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to rename.
+
+- **Request Body**:
+
+  ```json
+  {
+    "name": "New Task Name"
+  }
+  ```
+
+  > **Note:** The `name` field specifies the new name for the task.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "_id": "60f7b3b7b9b3b40015f3b3b7",
+        "classId": "60f7b3b7b9b3b40015f3b3b6",
+        "name": "New Task Name",
+        "description": "Task Description",
+        "createdAt": "2021-07-21T12:00:00.000Z",
+        "updatedAt": "2021-07-21T12:00:00.000Z"
+      },
+      "message": "Task renamed successfully."
+    }
+    ```
+
+    > **Note:** The updated task data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid task name.",
+      "error": {
+        "code": "INVALID_TASK_NAME",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Task not found.",
+      "error": {
+        "code": "TASK_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to rename task.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in renaming task.",
+      "error": {
+        "code": "TASK_RENAME_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Update Description
+
+- **URL:** `/api/tasks/:id/description`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to update description for.
+
+- **Request Body**:
+
+  ```json
+  {
+    "description": "New Task Description"
+  }
+  ```
+
+  > **Note:** The `description` field specifies the new description for the task.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "_id": "60f7b3b7b9b3b40015f3b3b7",
+        "classId": "60f7b3b7b9b3b40015f3b3b6",
+        "name": "Task Name",
+        "description": "New Task Description",
+        "createdAt": "2021-07-21T12:00:00.000Z",
+        "updatedAt": "2021-07-21T12:00:00.000Z"
+      },
+      "message": "Task description updated successfully."
+    }
+    ```
+
+    > **Note:** The updated task data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid task description.",
+      "error": {
+        "code": "INVALID_TASK_DESCRIPTION",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Task not found.",
+      "error": {
+        "code": "TASK_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to update task description.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in updating task description.",
+      "error": {
+        "code": "TASK_DESCRIPTION_UPDATE_ERROR",
+        "details": {}
+      }
+    }
+    ```
+
+> **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+#### Update Grading Status
+
+- **URL:** `/api/tasks/:id/grade/:studentNumber`
+- **Method:** `PUT`
+
+- **Request Parameters**:
+
+  - `id`: The ID of the task to update grading status for.
+  - `studentNumber`: The student number to update grading status for.
+
+- **Request Body**:
+
+  ```json
+  {
+    "graded": true
+  }
+  ```
+
+  > **Note:** The `graded` field specifies the new grading status for the task.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "_id": "60f7b3b7b9b3b40015f3b3b7",
+        "classId": "60f7b3b7b9b3b40015f3b3b6",
+        "name": "Task Name",
+        "description": "Task Description",
+        "createdAt": "2021-07-21T12:00:00.000Z",
+        "updatedAt": "2021-07-21T12:00:00.000Z"
+      },
+      "message": "Task grading status updated successfully."
+    }
+    ```
+
+    > **Note:** The updated task data will be returned in the response (`data` field).
+
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Invalid graded status.",
+      "error": {
+        "code": "INVALID_GRADED_STATUS",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Task not found.",
+      "error": {
+        "code": "TASK_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Class not found.",
+      "error": {
+        "code": "CLASS_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `403 Forbidden`
+
+    ```json
+    {
+      "status": "error",
+      "message": "You are not authorized to update grading status.",
+      "error": {
+        "code": "ACCESS_DENIED",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error in updating grading status.",
+      "error": {
+        "code": "GRADING_STATUS_UPDATE_ERROR",
         "details": {}
       }
     }
