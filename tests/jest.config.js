@@ -8,4 +8,5 @@ module.exports = {
   testEnvironment: "node",
   testPathIgnorePatterns: ["<rootDir>/node_modules/"],
   testMatch: ["<rootDir>/**/*.test.js"],
+  maxWorkers: 1,
 };

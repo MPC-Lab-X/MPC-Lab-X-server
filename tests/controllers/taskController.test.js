@@ -127,6 +127,33 @@ describe("TaskController - createTask", () => {
     expect(response.body.error.code).toBe("TASK_CREATION_ERROR");
   });
 
+  it("should return 403 if class does not authorize to create task", async () => {
+    const taskData = {
+      classId: "validClassId",
+      name: "Test Task",
+      description: "Test Description",
+      options: { isIndividualTask: true },
+    };
+    validationUtils.validateClassCode.mockReturnValue(true);
+    validationUtils.validateTaskName.mockReturnValue(true);
+    validationUtils.validateTaskDescription.mockReturnValue(true);
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+      students: [{ studentNumber: "456" }],
+    });
+
+    const response = await request(app)
+      .post("/api/classes/classId/tasks")
+      .send(taskData);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to create task."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
   it("should return 200 if task is created successfully", async () => {
     const taskData = {
       classId: "validClassId",
@@ -138,6 +165,7 @@ describe("TaskController - createTask", () => {
     validationUtils.validateTaskName.mockReturnValue(true);
     validationUtils.validateTaskDescription.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
+      teacher: "userId",
       students: [{ studentNumber: "123" }],
     });
     problemGenerator.generate.mockReturnValue([{ problem: "problem1" }]);
@@ -179,23 +207,36 @@ describe("TaskController - createTask", () => {
 });
 
 describe("TaskController - getTasks", () => {
-  it("should return 200 and tasks if tasks are retrieved successfully", async () => {
-    const classId = "validClassId";
-    const tasks = [
-      { _id: "taskId1", name: "Task 1" },
-      { _id: "taskId2", name: "Task 2" },
-    ];
-    taskService.getTasks.mockResolvedValue(tasks);
+  it("should return 404 if class is not found", async () => {
+    const classId = "nonExistentClassId";
+    classService.getClass.mockResolvedValue(null);
 
     const response = await request(app).get(`/api/classes/${classId}/tasks`);
 
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Tasks retrieved successfully.");
-    expect(response.body.data).toEqual(tasks);
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to get tasks", async () => {
+    const classId = "validClassId";
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app).get(`/api/classes/${classId}/tasks`);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe("You are not authorized to get tasks.");
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 500 if there is an error in retrieving tasks", async () => {
     const classId = "validClassId";
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.getTasks.mockRejectedValue(new Error("Error"));
 
     const response = await request(app).get(`/api/classes/${classId}/tasks`);
@@ -204,23 +245,29 @@ describe("TaskController - getTasks", () => {
     expect(response.body.message).toBe("Error in retrieving tasks.");
     expect(response.body.error.code).toBe("TASKS_RETRIEVAL_ERROR");
   });
+
+  it("should return 200 and the tasks if tasks are retrieved successfully", async () => {
+    const classId = "validClassId";
+    const tasks = [
+      { _id: "taskId1", name: "Task 1" },
+      { _id: "taskId2", name: "Task 2" },
+    ];
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
+    taskService.getTasks.mockResolvedValue(tasks);
+
+    const response = await request(app).get(`/api/classes/${classId}/tasks`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Tasks retrieved successfully.");
+    expect(response.body.data).toEqual(tasks);
+  });
 });
 
 describe("TaskController - getTask", () => {
-  it("should return 200 and the task if task is retrieved successfully", async () => {
-    const taskId = "validTaskId";
-    const task = { _id: taskId, name: "Test Task" };
-    taskService.getTask.mockResolvedValue(task);
-
-    const response = await request(app).get(`/api/tasks/${taskId}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Task retrieved successfully.");
-    expect(response.body.data).toEqual(task);
-  });
-
   it("should return 404 if task is not found", async () => {
-    const taskId = "invalidTaskId";
+    const taskId = "nonExistentTaskId";
     taskService.getTask.mockResolvedValue(null);
 
     const response = await request(app).get(`/api/tasks/${taskId}`);
@@ -230,7 +277,34 @@ describe("TaskController - getTask", () => {
     expect(response.body.error.code).toBe("TASK_NOT_FOUND");
   });
 
-  it("should return 500 if there is an error in retrieving the task", async () => {
+  it("should return 404 if class is not found", async () => {
+    const taskId = "validTaskId";
+    taskService.getTask.mockResolvedValue({ classId: "nonExistentClassId" });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app).get(`/api/tasks/${taskId}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to get task", async () => {
+    const taskId = "validTaskId";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app).get(`/api/tasks/${taskId}`);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe("You are not authorized to get task.");
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
+  it("should return 500 if there is an error in retrieving task", async () => {
     const taskId = "validTaskId";
     taskService.getTask.mockRejectedValue(new Error("Error"));
 
@@ -240,26 +314,26 @@ describe("TaskController - getTask", () => {
     expect(response.body.message).toBe("Error in retrieving task.");
     expect(response.body.error.code).toBe("TASK_RETRIEVAL_ERROR");
   });
+
+  it("should return 200 and the task if task is retrieved successfully", async () => {
+    const taskId = "validTaskId";
+    const task = { _id: taskId, name: "Task 1", classId: "validClassId" };
+    taskService.getTask.mockResolvedValue(task);
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
+
+    const response = await request(app).get(`/api/tasks/${taskId}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Task retrieved successfully.");
+    expect(response.body.data).toEqual(task);
+  });
 });
 
 describe("TaskController - getTaskProblems", () => {
-  it("should return 200 and problems if problems are retrieved successfully", async () => {
-    const taskId = "validTaskId";
-    const studentNumber = "123";
-    const problems = [{ problem: "problem1" }, { problem: "problem2" }];
-    taskService.getTaskProblems.mockResolvedValue(problems);
-
-    const response = await request(app).get(
-      `/api/tasks/${taskId}/problems/${studentNumber}`
-    );
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Problems retrieved successfully.");
-    expect(response.body.data).toEqual(problems);
-  });
-
   it("should return 404 if problems are not found", async () => {
-    const taskId = "validTaskId";
+    const taskId = "nonExistentTaskId";
     const studentNumber = "123";
     taskService.getTaskProblems.mockResolvedValue(null);
 
@@ -270,6 +344,43 @@ describe("TaskController - getTaskProblems", () => {
     expect(response.status).toBe(404);
     expect(response.body.message).toBe("Problems not found.");
     expect(response.body.error.code).toBe("PROBLEMS_NOT_FOUND");
+  });
+
+  it("should return 404 if class is not found", async () => {
+    const taskId = "validTaskId";
+    const studentNumber = "123";
+    taskService.getTaskProblems.mockResolvedValue({
+      classId: "nonExistentClassId",
+    });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app).get(
+      `/api/tasks/${taskId}/problems/${studentNumber}`
+    );
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to get problems", async () => {
+    const taskId = "validTaskId";
+    const studentNumber = "123";
+    taskService.getTaskProblems.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app).get(
+      `/api/tasks/${taskId}/problems/${studentNumber}`
+    );
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to get problems."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
   });
 
   it("should return 500 if there is an error in retrieving problems", async () => {
@@ -284,6 +395,24 @@ describe("TaskController - getTaskProblems", () => {
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("Error in retrieving problems.");
     expect(response.body.error.code).toBe("PROBLEMS_RETRIEVAL_ERROR");
+  });
+
+  it("should return 200 and the problems if problems are retrieved successfully", async () => {
+    const taskId = "validTaskId";
+    const studentNumber = "123";
+    const problems = { problems: ["problem1", "problem2"] };
+    taskService.getTaskProblems.mockResolvedValue(problems);
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
+
+    const response = await request(app).get(
+      `/api/tasks/${taskId}/problems/${studentNumber}`
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Problems retrieved successfully.");
+    expect(response.body.data).toEqual(problems);
   });
 });
 
@@ -303,10 +432,10 @@ describe("TaskController - updateGradingStatus", () => {
   });
 
   it("should return 404 if task is not found", async () => {
-    const taskId = "invalidTaskId";
+    const taskId = "nonExistentTaskId";
     const studentNumber = "123";
     const graded = true;
-    taskService.updateGradingStatus.mockResolvedValue(null);
+    taskService.getTask.mockResolvedValue(null);
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/grade/${studentNumber}`)
@@ -317,10 +446,51 @@ describe("TaskController - updateGradingStatus", () => {
     expect(response.body.error.code).toBe("TASK_NOT_FOUND");
   });
 
+  it("should return 404 if class is not found", async () => {
+    const taskId = "validTaskId";
+    const studentNumber = "123";
+    const graded = true;
+    taskService.getTask.mockResolvedValue({ classId: "nonExistentClassId" });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/grade/${studentNumber}`)
+      .send({ graded });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to update grading status", async () => {
+    const taskId = "validTaskId";
+    const studentNumber = "123";
+    const graded = true;
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/grade/${studentNumber}`)
+      .send({ graded });
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to update grading status."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
   it("should return 500 if there is an error in updating grading status", async () => {
     const taskId = "validTaskId";
     const studentNumber = "123";
     const graded = true;
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.updateGradingStatus.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
@@ -337,6 +507,10 @@ describe("TaskController - updateGradingStatus", () => {
     const studentNumber = "123";
     const graded = true;
     const updatedTask = { _id: taskId, graded };
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.updateGradingStatus.mockResolvedValue(updatedTask);
 
     const response = await request(app)
@@ -353,27 +527,66 @@ describe("TaskController - updateGradingStatus", () => {
 
 describe("TaskController - renameTask", () => {
   it("should return 404 if task is not found", async () => {
-    const taskId = "invalidTaskId";
-    const newName = "New Task Name";
-    taskService.updateTaskName.mockResolvedValue(null);
+    const taskId = "nonExistentTaskId";
+    const taskName = "New Task Name";
+    taskService.getTask.mockResolvedValue(null);
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/name`)
-      .send({ name: newName });
+      .send({ name: taskName });
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe("Task not found.");
     expect(response.body.error.code).toBe("TASK_NOT_FOUND");
   });
 
-  it("should return 500 if there is an error in renaming the task", async () => {
+  it("should return 404 if class is not found", async () => {
     const taskId = "validTaskId";
-    const newName = "New Task Name";
+    const taskName = "New Task Name";
+    taskService.getTask.mockResolvedValue({ classId: "nonExistentClassId" });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/name`)
+      .send({ name: taskName });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to rename task", async () => {
+    const taskId = "validTaskId";
+    const taskName = "New Task Name";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/name`)
+      .send({ name: taskName });
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to rename task."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
+  it("should return 500 if there is an error in renaming task", async () => {
+    const taskId = "validTaskId";
+    const taskName = "New Task Name";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.updateTaskName.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/name`)
-      .send({ name: newName });
+      .send({ name: taskName });
 
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("Error in renaming task.");
@@ -382,43 +595,88 @@ describe("TaskController - renameTask", () => {
 
   it("should return 200 if task is renamed successfully", async () => {
     const taskId = "validTaskId";
-    const newName = "New Task Name";
-    const updatedTask = { _id: taskId, name: newName };
-    taskService.updateTaskName.mockResolvedValue(updatedTask);
+    const taskName = "New Task Name";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
+    taskService.updateTaskName.mockResolvedValue({
+      _id: taskId,
+      name: taskName,
+    });
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/name`)
-      .send({ name: newName });
+      .send({ name: taskName });
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("Task renamed successfully.");
-    expect(response.body.data).toEqual(updatedTask);
+    expect(response.body.data.name).toBe(taskName);
   });
 });
 
 describe("TaskController - updateDescription", () => {
   it("should return 404 if task is not found", async () => {
-    const taskId = "invalidTaskId";
-    const newDescription = "New Task Description";
-    taskService.updateTaskDescription.mockResolvedValue(null);
+    const taskId = "nonExistentTaskId";
+    const description = "New Description";
+    taskService.getTask.mockResolvedValue(null);
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/description`)
-      .send({ description: newDescription });
+      .send({ description });
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe("Task not found.");
     expect(response.body.error.code).toBe("TASK_NOT_FOUND");
   });
 
-  it("should return 500 if there is an error in updating the task description", async () => {
+  it("should return 404 if class is not found", async () => {
     const taskId = "validTaskId";
-    const newDescription = "New Task Description";
+    const description = "New Description";
+    taskService.getTask.mockResolvedValue({ classId: "nonExistentClassId" });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/description`)
+      .send({ description });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to update task description", async () => {
+    const taskId = "validTaskId";
+    const description = "New Description";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app)
+      .put(`/api/tasks/${taskId}/description`)
+      .send({ description });
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to update task description."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
+  it("should return 500 if there is an error in updating task description", async () => {
+    const taskId = "validTaskId";
+    const description = "New Description";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.updateTaskDescription.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/description`)
-      .send({ description: newDescription });
+      .send({ description });
 
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("Error in updating task description.");
@@ -427,13 +685,17 @@ describe("TaskController - updateDescription", () => {
 
   it("should return 200 if task description is updated successfully", async () => {
     const taskId = "validTaskId";
-    const newDescription = "New Task Description";
-    const updatedTask = { _id: taskId, description: newDescription };
+    const description = "New Description";
+    const updatedTask = { _id: taskId, description };
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.updateTaskDescription.mockResolvedValue(updatedTask);
 
     const response = await request(app)
       .put(`/api/tasks/${taskId}/description`)
-      .send({ description: newDescription });
+      .send({ description });
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe(
@@ -445,8 +707,8 @@ describe("TaskController - updateDescription", () => {
 
 describe("TaskController - deleteTask", () => {
   it("should return 404 if task is not found", async () => {
-    const taskId = "invalidTaskId";
-    taskService.deleteTask.mockResolvedValue(null);
+    const taskId = "nonExistentTaskId";
+    taskService.getTask.mockResolvedValue(null);
 
     const response = await request(app).delete(`/api/tasks/${taskId}`);
 
@@ -455,8 +717,41 @@ describe("TaskController - deleteTask", () => {
     expect(response.body.error.code).toBe("TASK_NOT_FOUND");
   });
 
-  it("should return 500 if there is an error in deleting the task", async () => {
+  it("should return 404 if class is not found", async () => {
     const taskId = "validTaskId";
+    taskService.getTask.mockResolvedValue({ classId: "nonExistentClassId" });
+    classService.getClass.mockResolvedValue(null);
+
+    const response = await request(app).delete(`/api/tasks/${taskId}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Class not found.");
+    expect(response.body.error.code).toBe("CLASS_NOT_FOUND");
+  });
+
+  it("should return 403 if user is not authorized to delete task", async () => {
+    const taskId = "validTaskId";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "otherUserId",
+      admins: [],
+    });
+
+    const response = await request(app).delete(`/api/tasks/${taskId}`);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe(
+      "You are not authorized to delete task."
+    );
+    expect(response.body.error.code).toBe("ACCESS_DENIED");
+  });
+
+  it("should return 500 if there is an error in deleting task", async () => {
+    const taskId = "validTaskId";
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
     taskService.deleteTask.mockRejectedValue(new Error("Error"));
 
     const response = await request(app).delete(`/api/tasks/${taskId}`);
@@ -468,13 +763,16 @@ describe("TaskController - deleteTask", () => {
 
   it("should return 200 if task is deleted successfully", async () => {
     const taskId = "validTaskId";
-    const deletedTask = { _id: taskId };
-    taskService.deleteTask.mockResolvedValue(deletedTask);
+    taskService.getTask.mockResolvedValue({ classId: "validClassId" });
+    classService.getClass.mockResolvedValue({
+      teacher: "userId",
+    });
+    taskService.deleteTask.mockResolvedValue({ _id: taskId });
 
     const response = await request(app).delete(`/api/tasks/${taskId}`);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("Task deleted successfully.");
-    expect(response.body.data).toEqual(deletedTask);
+    expect(response.body.data._id).toBe(taskId);
   });
 });

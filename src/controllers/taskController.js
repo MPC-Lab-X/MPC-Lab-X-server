@@ -17,6 +17,7 @@ const validationUtils = require("../utils/validationUtils");
  * @param {Response} res - The response object.
  */
 const createTask = async (req, res) => {
+  const userId = req.user.userId;
   const { classId, name, description, options } = req.body;
 
   // Check if class ID is valid
@@ -43,8 +44,7 @@ const createTask = async (req, res) => {
   }
 
   // Generate problems based on options
-  const generateProblems = async (classId, options) => {
-    const students = (await classService.getClass(classId)).students;
+  const generateProblems = async (students, options) => {
     const studentNumbers = students.map((student) => student.studentNumber);
 
     if (options.isIndividualTask) {
@@ -78,7 +78,26 @@ const createTask = async (req, res) => {
   };
 
   try {
-    const generatedProblems = await generateProblems(classId, options);
+    const classData = await classService.getClass(classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to create task.",
+        "ACCESS_DENIED"
+      );
+    }
+
+    const generatedProblems = await generateProblems(
+      classData.students,
+      options
+    );
     const task = await createTask({
       classId,
       name,
@@ -101,9 +120,26 @@ const createTask = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const getTasks = async (req, res) => {
+  const userId = req.user.userId;
   const { classId } = req.params;
 
   try {
+    const classData = await classService.getClass(classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to get tasks.",
+        "ACCESS_DENIED"
+      );
+    }
+
     const tasks = await taskService.getTasks(classId);
 
     return res.success(tasks, "Tasks retrieved successfully.");
@@ -121,6 +157,7 @@ const getTasks = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const getTask = async (req, res) => {
+  const userId = req.user.userId;
   const { id } = req.params;
 
   try {
@@ -128,6 +165,22 @@ const getTask = async (req, res) => {
 
     if (!task) {
       return res.notFound("Task not found.", "TASK_NOT_FOUND");
+    }
+
+    const classData = await classService.getClass(task.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to get task.",
+        "ACCESS_DENIED"
+      );
     }
 
     return res.success(task, "Task retrieved successfully.");
@@ -145,16 +198,33 @@ const getTask = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const getTaskProblems = async (req, res) => {
+  const userId = req.user.userId;
   const { id, studentNumber } = req.params;
 
   try {
-    const problems = await taskService.getTaskProblems(id, studentNumber);
+    const task = await taskService.getTaskProblems(id, studentNumber);
 
-    if (!problems) {
+    if (!task) {
       return res.notFound("Problems not found.", "PROBLEMS_NOT_FOUND");
     }
 
-    return res.success(problems, "Problems retrieved successfully.");
+    const classData = await classService.getClass(task.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to get problems.",
+        "ACCESS_DENIED"
+      );
+    }
+
+    return res.success(task, "Problems retrieved successfully.");
   } catch (error) {
     return res.internalServerError(
       "Error in retrieving problems.",
@@ -169,6 +239,7 @@ const getTaskProblems = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const updateGradingStatus = async (req, res) => {
+  const userId = req.user.userId;
   const { id, studentNumber } = req.params;
   const { graded } = req.body;
 
@@ -178,15 +249,32 @@ const updateGradingStatus = async (req, res) => {
   }
 
   try {
+    const taskData = await taskService.getTask(id);
+    if (!taskData) {
+      return res.notFound("Task not found.", "TASK_NOT_FOUND");
+    }
+
+    const classData = await classService.getClass(taskData.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to update grading status.",
+        "ACCESS_DENIED"
+      );
+    }
+
     const task = await taskService.updateGradingStatus(
       id,
       studentNumber,
       graded
     );
-
-    if (!task) {
-      return res.notFound("Task not found.", "TASK_NOT_FOUND");
-    }
 
     return res.success(task, "Task grading status updated successfully.");
   } catch (error) {
@@ -203,6 +291,7 @@ const updateGradingStatus = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const renameTask = async (req, res) => {
+  const userId = req.user.userId;
   const { id } = req.params;
   const { name } = req.body;
 
@@ -212,6 +301,27 @@ const renameTask = async (req, res) => {
   }
 
   try {
+    const taskData = await taskService.getTask(id);
+    if (!taskData) {
+      return res.notFound("Task not found.", "TASK_NOT_FOUND");
+    }
+
+    const classData = await classService.getClass(taskData.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to rename task.",
+        "ACCESS_DENIED"
+      );
+    }
+
     const task = await taskService.updateTaskName(id, name);
 
     if (!task) {
@@ -233,6 +343,7 @@ const renameTask = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const updateDescription = async (req, res) => {
+  const userId = req.user.userId;
   const { id } = req.params;
   const { description } = req.body;
 
@@ -245,6 +356,27 @@ const updateDescription = async (req, res) => {
   }
 
   try {
+    const taskData = await taskService.getTask(id);
+    if (!taskData) {
+      return res.notFound("Task not found.", "TASK_NOT_FOUND");
+    }
+
+    const classData = await classService.getClass(taskData.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to update task description.",
+        "ACCESS_DENIED"
+      );
+    }
+
     const task = await taskService.updateTaskDescription(id, description);
 
     if (!task) {
@@ -266,9 +398,31 @@ const updateDescription = async (req, res) => {
  * @param {Response} res - The response object.
  */
 const deleteTask = async (req, res) => {
+  const userId = req.user.userId;
   const { id } = req.params;
 
   try {
+    const taskData = await taskService.getTask(id);
+    if (!taskData) {
+      return res.notFound("Task not found.", "TASK_NOT_FOUND");
+    }
+
+    const classData = await classService.getClass(taskData.classId);
+    if (!classData) {
+      return res.notFound("Class not found.", "CLASS_NOT_FOUND");
+    }
+
+    // Check if teacher is the class teacher
+    if (
+      classData.teacher.toString() !== userId &&
+      !classData.admins.includes(userId)
+    ) {
+      return res.forbidden(
+        "You are not authorized to delete task.",
+        "ACCESS_DENIED"
+      );
+    }
+
     const task = await taskService.deleteTask(id);
 
     if (!task) {

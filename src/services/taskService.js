@@ -77,7 +77,7 @@ const getTaskProblems = async (taskId, studentNumber) => {
 
   try {
     const task = await Task.findById(taskId).select(
-      "userTasks.studentNumber userTasks.problems"
+      "classId userTasks.studentNumber userTasks.problems"
     );
 
     if (!task) throw new Error("Task not found");
