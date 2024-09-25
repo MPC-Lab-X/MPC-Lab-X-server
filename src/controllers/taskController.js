@@ -42,41 +42,44 @@ const createTask = async (req, res) => {
     return res.badRequest("Options are required.", "OPTIONS_REQUIRED");
   }
 
-  let generatedProblems = [];
-
-  // Generate problems for the task based on the options
-  try {
-    // Get students for the class
+  // Generate problems based on options
+  const generateProblems = async (classId, options) => {
     const students = (await classService.getClass(classId)).students;
     const studentNumbers = students.map((student) => student.studentNumber);
 
     if (options.isIndividualTask) {
       delete options.isIndividualTask;
 
-      // Generate problems for each student
-      for (const studentNumber of studentNumbers) {
-        const problems = problemGenerator.generate(options);
-        generatedProblems.push({ studentNumber, problems });
-      }
+      return await Promise.all(
+        studentNumbers.map(async (studentNumber) => {
+          const problems = problemGenerator.generate(options);
+          return { studentNumber, problems };
+        })
+      );
     } else {
       delete options.isIndividualTask;
 
-      // Generate problems for the whole class
       const problems = problemGenerator.generate(options);
-      for (const studentNumber of studentNumbers) {
-        generatedProblems.push({ studentNumber, problems });
-      }
+      return studentNumbers.map((studentNumber) => ({
+        studentNumber,
+        problems,
+      }));
     }
-  } catch (error) {
-    return res.internalServerError(
-      "Error in generating problems.",
-      "PROBLEM_GENERATION_ERROR"
-    );
-  }
+  };
 
-  // Create the task
+  // Create task with generated problems
+  const createTask = async ({ classId, name, description, userTasks }) => {
+    return await taskService.createTask({
+      classId,
+      name,
+      description,
+      userTasks,
+    });
+  };
+
   try {
-    const task = await taskService.createTask({
+    const generatedProblems = await generateProblems(classId, options);
+    const task = await createTask({
       classId,
       name,
       description,
