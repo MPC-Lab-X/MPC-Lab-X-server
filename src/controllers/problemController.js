@@ -3,8 +3,18 @@
  * @description Controller for problem generation.
  */
 
+const index = require("../problem-generators/index.json");
 const ProblemGenerator = require("../problem-generators");
 const problemGenerator = new ProblemGenerator();
+
+/**
+ * @function getIndex - Get the problem generator index.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+getIndex = (req, res) => {
+  res.success(index, "Problem generator index retrieved successfully.");
+};
 
 /**
  * @function generateProblem - Generate a new problem.
@@ -36,5 +46,6 @@ generateProblem = (req, res) => {
 };
 
 module.exports = {
+  getIndex,
   generateProblem,
 };
