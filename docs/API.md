@@ -2031,18 +2031,18 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
           "path": ["algebra", "linearEquations", "oneVariable", "solving"],
           "options": {
             "count": 5,
-            "shuffle": "topics"
+            "...moreOptions": "..."
           }
         },
         {
           "path": ["geometry", "triangles", "area", "solving"],
           "options": {
             "count": 5,
-            "shuffle": "topics"
+            "...moreOptions": "..."
           }
         }
       ],
-      "shuffle": "all"
+      "shuffle": true
     }
   }
   ```

@@ -89,7 +89,7 @@ class ProblemGenerator {
    * @function generate - Generate problems for the specified topics.
    * @param {Object} options - The options for generating the problems.
    * @param {Array<Object>} options.topics - The topics for generating the problems.
-   * @param {string} options.shuffle - Whether to shuffle the problems. (Shuffle types: "none", "all", "topics")
+   * @param {boolean} options.shuffle - Whether to shuffle the problems
    * @returns {Array<Object>} - The generated problems.
    */
   generate(options) {
@@ -123,14 +123,10 @@ class ProblemGenerator {
           topicProblems.push(problem);
         }
 
-        if (options.shuffle === "topics") {
-          topicProblems.sort(() => Math.random() - 0.5);
-        }
-
         problems.push(...topicProblems);
       }
 
-      if (options.shuffle === "all") {
+      if (options.shuffle) {
         problems.sort(() => Math.random() - 0.5);
       }
     } catch (e) {
