@@ -100,8 +100,8 @@ class ProblemGenerator {
         const path = topic.path;
         const topicOptions = topic.options;
 
-        const generator = this.generators[path[0]][path[1]][path[2]][path[3]];
-        const parameters = this.parameters[path[0]][path[1]][path[2]][path[3]];
+        const generator = path.reduce((acc, cur) => acc[cur], this.generators);
+        const parameters = path.reduce((acc, cur) => acc[cur], this.parameters);
 
         for (const key in parameters) {
           if (topicOptions[key] === undefined) {
