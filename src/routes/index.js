@@ -10,11 +10,14 @@ const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
 const classRoutes = require("./classRoutes");
 const taskRoutes = require("./taskRoutes");
+const problemRoutes = require("./problemRoutes");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/classes", classRoutes);
 router.use("/tasks", taskRoutes);
+
+router.use("/problems", problemRoutes);
 
 router.get("*", (req, res) => {
   res.notFound();

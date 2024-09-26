@@ -103,6 +103,10 @@ class ProblemGenerator {
         const generator = path.reduce((acc, cur) => acc[cur], this.generators);
         const parameters = path.reduce((acc, cur) => acc[cur], this.parameters);
 
+        if (!generator || !parameters) {
+          throw new Error("Generator not found");
+        }
+
         for (const key in parameters) {
           if (topicOptions[key] === undefined) {
             topicOptions[key] = parameters[key];
@@ -130,10 +134,20 @@ class ProblemGenerator {
         problems.sort(() => Math.random() - 0.5);
       }
     } catch (e) {
-      throw new Error(`Error generating problems: ${e.message}`);
+      throw e;
     }
 
     return problems;
+  }
+
+  /**
+   * @function generateOne - Generate a single problem for the specified topics.
+   * @param {Object} topic - The topic for generating the problem.
+   * @returns {Object} - The generated problem.
+   */
+  generateOne(topic) {
+    const problems = this.generate({ topics: [topic], shuffle: false });
+    return problems[0];
   }
 
   /**

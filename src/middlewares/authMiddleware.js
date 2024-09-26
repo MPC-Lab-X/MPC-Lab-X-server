@@ -14,6 +14,8 @@ const publicRoutes = [
   "/api/auth/complete-reset-password",
 ];
 
+const publicRootRoutes = ["/api/problems"];
+
 /**
  * @function authMiddleware - Authenticate the user's JWT.
  * @param {Object} req - The request object.
@@ -23,6 +25,10 @@ const publicRoutes = [
  */
 const authMiddleware = (req, res, next) => {
   if (publicRoutes.includes(req.path)) {
+    return next();
+  }
+
+  if (publicRootRoutes.some((route) => req.path.startsWith(route))) {
     return next();
   }
 
