@@ -45,6 +45,9 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
   - [Rename Task](#rename-task)
   - [Update Description](#update-description)
   - [Update Grading Status](#update-grading-status)
+- [Problem Generation Endpoints](#problem-generation-endpoints)
+  - [Get Problem Generator Index](#get-problem-generator-index)
+  - [Generate Problem](#generate-problem)
 
 ### Authentication Endpoints
 
@@ -2803,3 +2806,81 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
     ```
 
 > **Note:** The endpoint is protected, and the user must be authenticated to access it.
+
+### Problem Generation Endpoints
+
+#### Get Problem Generator Index
+
+- **URL:** `/api/problems`
+- **Method:** `GET`
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": [],
+      "message": "Problem generator index retrieved successfully."
+    }
+    ```
+
+    > **Note:** The problem generator index will be returned in the response (`data` field).
+
+#### Generate Problem
+
+- **URL:** `/api/problems/:topics/:subtopics/:...`
+- **Method:** `GET`
+
+- **Request Parameters**:
+
+  - `topics`: The topics to generate the problem for.
+  - `subtopics`: The subtopics to generate the problem for.
+  - `...`: More subtopics if needed.
+
+  > **Note:** The topics and subtopics are separated by `/`.
+
+- **Query Parameters**:
+
+  - `options`: The problem generation options.
+
+- **Response**:
+
+  - **Status:** `200 OK`
+
+    ```json
+    {
+      "status": "success",
+      "data": {},
+      "message": "Problem generated successfully."
+    }
+    ```
+
+    > **Note:** The generated problem will be returned in the response (`data` field).
+
+  - **Status:** `404 Not Found`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Generator not found.",
+      "error": {
+        "code": "GENERATOR_NOT_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
+  - **Status:** `500 Internal Server Error`
+
+    ```json
+    {
+      "status": "error",
+      "message": "Error generating problem.",
+      "error": {
+        "code": "GENERATE_PROBLEM_ERROR",
+        "details": {}
+      }
+    }
+    ```
