@@ -27,7 +27,6 @@ app.set("trust proxy", 1);
 if (process.env.NODE_ENV !== "test") db.connectDB();
 
 // Middleware setup
-app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(preprocessRequestDetailsMiddleware);
 app.use(responseMiddleware);
