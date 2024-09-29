@@ -138,6 +138,9 @@ const updateUserById = async (userId, update) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) return null;
 
   try {
+    if (update.password) {
+      update.password = await hashPassword(update.password);
+    }
     const updatedUser = await User.findByIdAndUpdate(userId, update, {
       new: true,
     });

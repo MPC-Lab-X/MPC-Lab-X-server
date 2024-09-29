@@ -13,7 +13,7 @@ const preprocessRequestDetailsMiddleware = require("./src/middlewares/preprocess
 const responseMiddleware = require("./src/middlewares/responseMiddleware");
 const authMiddleware = require("./src/middlewares/authMiddleware");
 const db = require("./src/db/db");
-const routes = require("./src/routes/index");
+const routes = require("./src/routes");
 
 const port = process.env.PORT || 5000;
 const host = process.env.HOST || "localhost";
