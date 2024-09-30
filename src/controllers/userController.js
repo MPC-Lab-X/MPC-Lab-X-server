@@ -173,7 +173,7 @@ const updateEmail = async (req, res) => {
   // Generate a JWT token for email verification
   const token = jwtService.generateToken(
     { email },
-    process.env.EMAIL_SECRET,
+    process.env.JWT_SECRET,
     "1h"
   );
 
@@ -207,7 +207,7 @@ const completeEmailUpdate = async (req, res) => {
 
   // Verify the token
   try {
-    const payload = jwtService.verifyToken(token, process.env.EMAIL_SECRET);
+    const payload = jwtService.verifyToken(token, process.env.JWT_SECRET);
     if (!payload.email) {
       return res.badRequest("Invalid token.", "INVALID_TOKEN");
     }
