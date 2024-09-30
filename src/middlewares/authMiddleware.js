@@ -51,7 +51,7 @@ const authMiddleware = (req, res, next) => {
       return res.unauthorized("Token expired.", "TOKEN_EXPIRED");
     }
     if (error.name === "JsonWebTokenError") {
-      return res.badRequest("Invalid token.", "INVALID_TOKEN");
+      return res.unauthorized("Invalid token.", "INVALID_TOKEN");
     } else {
       return res.internalServerError(
         "Error verifying token.",

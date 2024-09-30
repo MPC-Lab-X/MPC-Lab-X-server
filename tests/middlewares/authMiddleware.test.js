@@ -72,7 +72,7 @@ describe("authMiddleware", () => {
     );
   });
 
-  it("should return bad request if token is invalid", () => {
+  it("should return unauthorized if token is invalid", () => {
     req.path = "/api/protected";
     req.headers["authorization"] = "invalid-token";
     const error = new Error("Invalid token");
@@ -83,7 +83,7 @@ describe("authMiddleware", () => {
 
     authMiddleware(req, res, next);
 
-    expect(res.badRequest).toHaveBeenCalledWith(
+    expect(res.unauthorized).toHaveBeenCalledWith(
       "Invalid token.",
       "INVALID_TOKEN"
     );
