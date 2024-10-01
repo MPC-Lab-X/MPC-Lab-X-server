@@ -81,7 +81,13 @@ classSchema.index({ teacher: 1 });
 classSchema.index({ admins: 1 });
 
 // Index the students field (compound index with studentNumber)
-classSchema.index({ _id: 1, "students.studentNumber": 1 }, { unique: true });
+classSchema.index(
+  { _id: 1, "students.studentNumber": 1 },
+  {
+    unique: true,
+    partialFilterExpression: { "students.studentNumber": { $ne: null } },
+  }
+);
 
 // Delete the deleted field from the class object when converting to JSON
 classSchema.set("toJSON", {
