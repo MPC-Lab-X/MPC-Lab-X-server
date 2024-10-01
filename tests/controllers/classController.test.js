@@ -93,7 +93,11 @@ describe("ClassController - deleteClass", () => {
   it("should return 403 if user is not authorized to delete the class", async () => {
     const classId = "validClassId";
     validationUtils.validateClassCode.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "anotherUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "anotherUserId",
+      },
+    });
 
     const response = await request(app).delete(`/api/classes/${classId}`);
 
@@ -107,7 +111,11 @@ describe("ClassController - deleteClass", () => {
   it("should return 200 if class is deleted successfully", async () => {
     const classId = "validClassId";
     validationUtils.validateClassCode.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.deleteClass.mockResolvedValue(true);
 
     const response = await request(app).delete(`/api/classes/${classId}`);
@@ -119,7 +127,11 @@ describe("ClassController - deleteClass", () => {
   it("should return 500 if there is an error deleting the class", async () => {
     const classId = "validClassId";
     validationUtils.validateClassCode.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.deleteClass.mockRejectedValue(new Error("Error"));
 
     const response = await request(app).delete(`/api/classes/${classId}`);
@@ -182,7 +194,9 @@ describe("ClassController - renameClass", () => {
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateClassName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "anotherUserId",
+      teacher: {
+        _id: "anotherUserId",
+      },
       admins: [],
     });
 
@@ -202,7 +216,12 @@ describe("ClassController - renameClass", () => {
     const classData = { name: "New Class Name" };
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateClassName.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId", admins: [] });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+      admins: [],
+    });
     classService.renameClass.mockResolvedValue(classData);
 
     const response = await request(app)
@@ -219,7 +238,12 @@ describe("ClassController - renameClass", () => {
     const classData = { name: "New Class Name" };
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateClassName.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId", admins: [] });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+      admins: [],
+    });
     classService.renameClass.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
@@ -302,7 +326,7 @@ describe("ClassController - addAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
     classService.getClass.mockResolvedValue(null);
 
     const response = await request(app)
@@ -318,8 +342,12 @@ describe("ClassController - addAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "anotherUserId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "anotherUserId",
+      },
+    });
 
     const response = await request(app)
       .post(`/api/classes/${classId}/admins`)
@@ -336,8 +364,12 @@ describe("ClassController - addAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.addAdmin.mockResolvedValue({ ...adminData, classId });
 
     const response = await request(app)
@@ -353,8 +385,12 @@ describe("ClassController - addAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.addAdmin.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
@@ -401,7 +437,7 @@ describe("ClassController - removeAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
     classService.getClass.mockResolvedValue(null);
 
     const response = await request(app)
@@ -417,8 +453,12 @@ describe("ClassController - removeAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "anotherUserId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "anotherUserId",
+      },
+    });
 
     const response = await request(app)
       .delete(`/api/classes/${classId}/admins`)
@@ -435,8 +475,12 @@ describe("ClassController - removeAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.removeAdmin.mockResolvedValue({ ...adminData, classId });
 
     const response = await request(app)
@@ -452,8 +496,12 @@ describe("ClassController - removeAdmin", () => {
     const classId = "validClassId";
     const adminData = { userId: "validUserId" };
     validationUtils.validateClassCode.mockReturnValue(true);
-    userService.getUserById.mockResolvedValue({ id: "validUserId" });
-    classService.getClass.mockResolvedValue({ teacher: "userId" });
+    userService.getUserById.mockResolvedValue({ _id: "validUserId" });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+    });
     classService.removeAdmin.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
@@ -518,7 +566,9 @@ describe("ClassController - addStudent", () => {
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "anotherUserId",
+      teacher: {
+        _id: "anotherUserId",
+      },
       admins: [],
     });
 
@@ -539,7 +589,9 @@ describe("ClassController - addStudent", () => {
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
       admins: [],
     });
     classService.addStudent.mockResolvedValue({ ...studentData, classId });
@@ -559,7 +611,9 @@ describe("ClassController - addStudent", () => {
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
       admins: [],
     });
     classService.addStudent.mockRejectedValue(new Error("Error"));
@@ -649,7 +703,9 @@ describe("ClassController - renameStudent", () => {
     validationUtils.validateStudentNumber.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "anotherUserId",
+      teacher: {
+        _id: "anotherUserId",
+      },
       admins: [],
     });
 
@@ -672,7 +728,9 @@ describe("ClassController - renameStudent", () => {
     validationUtils.validateStudentNumber.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
       admins: [],
     });
     classService.renameStudent.mockResolvedValue(studentData);
@@ -694,7 +752,9 @@ describe("ClassController - renameStudent", () => {
     validationUtils.validateStudentNumber.mockReturnValue(true);
     validationUtils.validateStudentName.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
       admins: [],
     });
     classService.renameStudent.mockRejectedValue(new Error("Error"));
@@ -761,7 +821,9 @@ describe("ClassController - deleteStudent", () => {
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentNumber.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "anotherUserId",
+      teacher: {
+        _id: "anotherUserId",
+      },
       admins: [],
     });
 
@@ -781,7 +843,12 @@ describe("ClassController - deleteStudent", () => {
     const studentNumber = 1;
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentNumber.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId", admins: [] });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+      admins: [],
+    });
     classService.deleteStudent.mockResolvedValue(true);
 
     const response = await request(app).delete(
@@ -797,7 +864,12 @@ describe("ClassController - deleteStudent", () => {
     const studentNumber = 1;
     validationUtils.validateClassCode.mockReturnValue(true);
     validationUtils.validateStudentNumber.mockReturnValue(true);
-    classService.getClass.mockResolvedValue({ teacher: "userId", admins: [] });
+    classService.getClass.mockResolvedValue({
+      teacher: {
+        _id: "userId",
+      },
+      admins: [],
+    });
     classService.deleteStudent.mockRejectedValue(new Error("Error"));
 
     const response = await request(app).delete(

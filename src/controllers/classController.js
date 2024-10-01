@@ -59,7 +59,7 @@ const deleteClass = async (req, res) => {
     }
 
     // Check if teacher is the class teacher
-    if (classData.teacher.toString() !== teacherId) {
+    if (classData.teacher._id.toString() !== teacherId) {
       return res.forbidden(
         "You are not authorized to delete this class.",
         "ACCESS_DENIED"
@@ -110,8 +110,8 @@ const renameClass = async (req, res) => {
 
     // Check if user is the class teacher or admin
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to rename this class.",
@@ -173,8 +173,8 @@ const getClass = async (req, res) => {
 
     // Check if user is the class teacher or admin
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to view this class.",
@@ -217,7 +217,7 @@ const addAdmin = async (req, res) => {
     }
 
     // Check if teacher is the class teacher
-    if (classData.teacher.toString() !== teacherId) {
+    if (classData.teacher._id.toString() !== teacherId) {
       return res.forbidden(
         "You are not authorized to add an admin to this class.",
         "ACCESS_DENIED"
@@ -261,7 +261,7 @@ const removeAdmin = async (req, res) => {
     }
 
     // Check if teacher is the class teacher
-    if (classData.teacher.toString() !== teacherId) {
+    if (classData.teacher._id.toString() !== teacherId) {
       return res.forbidden(
         "You are not authorized to remove an admin from this class.",
         "ACCESS_DENIED"
@@ -308,8 +308,8 @@ const addStudent = async (req, res) => {
 
     // Check if teacher is the class teacher or admin
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to add a student to this class.",
@@ -362,8 +362,8 @@ const renameStudent = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to rename a student in this class.",
@@ -414,8 +414,8 @@ const deleteStudent = async (req, res) => {
 
     // Check if teacher is the class teacher or admin
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to delete a student from this class.",
