@@ -275,7 +275,7 @@ describe("ClassController - addAdmin", () => {
     validationUtils.validateClassCode.mockReturnValue(false);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(400);
@@ -290,7 +290,7 @@ describe("ClassController - addAdmin", () => {
     userService.getUserById.mockResolvedValue(null);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(404);
@@ -306,7 +306,7 @@ describe("ClassController - addAdmin", () => {
     classService.getClass.mockResolvedValue(null);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(404);
@@ -322,7 +322,7 @@ describe("ClassController - addAdmin", () => {
     classService.getClass.mockResolvedValue({ teacher: "anotherUserId" });
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(403);
@@ -341,7 +341,7 @@ describe("ClassController - addAdmin", () => {
     classService.addAdmin.mockResolvedValue({ ...adminData, classId });
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(200);
@@ -358,7 +358,7 @@ describe("ClassController - addAdmin", () => {
     classService.addAdmin.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/admins`)
+      .post(`/api/classes/${classId}/admins`)
       .send(adminData);
 
     expect(response.status).toBe(500);
@@ -473,7 +473,7 @@ describe("ClassController - addStudent", () => {
     validationUtils.validateClassCode.mockReturnValue(false);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(400);
@@ -488,7 +488,7 @@ describe("ClassController - addStudent", () => {
     validationUtils.validateStudentName.mockReturnValue(false);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(400);
@@ -504,7 +504,7 @@ describe("ClassController - addStudent", () => {
     classService.getClass.mockResolvedValue(null);
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(404);
@@ -523,7 +523,7 @@ describe("ClassController - addStudent", () => {
     });
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(403);
@@ -545,7 +545,7 @@ describe("ClassController - addStudent", () => {
     classService.addStudent.mockResolvedValue({ ...studentData, classId });
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(200);
@@ -565,7 +565,7 @@ describe("ClassController - addStudent", () => {
     classService.addStudent.mockRejectedValue(new Error("Error"));
 
     const response = await request(app)
-      .put(`/api/classes/${classId}/students`)
+      .post(`/api/classes/${classId}/students`)
       .send(studentData);
 
     expect(response.status).toBe(500);

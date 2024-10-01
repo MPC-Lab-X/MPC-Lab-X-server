@@ -19,10 +19,10 @@ router.get("/:id", classController.getClass);
 router.post("/:classId/tasks", taskController.createTask);
 router.get("/:classId/tasks", taskController.getTasks);
 
-router.put("/:id/admins", classController.addAdmin);
+router.post("/:id/admins", classController.addAdmin);
 router.delete("/:id/admins", classController.removeAdmin);
 
-router.put("/:id/students", classController.addStudent);
+router.post("/:id/students", classController.addStudent);
 router.put("/:id/students/:studentNumber", classController.renameStudent);
 router.delete("/:id/students/:studentNumber", classController.deleteStudent);
 

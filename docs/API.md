@@ -1508,7 +1508,7 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
 #### Add Admin
 
 - **URL:** `/api/classes/:id/admins`
-- **Method:** `PUT`
+- **Method:** `POST`
 
 - **Request Parameters**:
 
@@ -1708,7 +1708,7 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
 #### Add Student
 
 - **URL:** `/api/classes/:id/students`
-- **Method:** `PUT`
+- **Method:** `POST`
 
 - **Request Parameters**:
 
