@@ -31,7 +31,9 @@ const createClass = async (classData) => {
  */
 const getClass = async (classId) => {
   try {
-    const classData = await Class.findOne({ _id: classId, deleted: false });
+    const classData = await Class.findOne({ _id: classId, deleted: false })
+      .populate("teacher", "username displayName email")
+      .populate("admins", "username displayName email");
     return classData;
   } catch (error) {
     console.error("Error in getting class: ", error);
@@ -54,7 +56,9 @@ const getClasses = async (userId) => {
     const classes = await Class.find({
       $or: [{ teacher: userId }, { admins: userId }],
       deleted: false,
-    });
+    })
+      .populate("teacher", "username displayName email")
+      .populate("admins", "username displayName email");
     return classes;
   } catch (error) {
     console.error("Error in getting classes: ", error);

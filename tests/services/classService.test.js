@@ -4,6 +4,7 @@
  */
 
 const Class = require("../../src/models/classSchema");
+const User = require("../../src/models/userSchema");
 const classService = require("../../src/services/classService");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
@@ -23,6 +24,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
   await Class.deleteMany({});
+  await User.deleteMany({});
 });
 
 describe("Class Service", () => {
@@ -49,18 +51,36 @@ describe("Class Service", () => {
 
   describe("getClass", () => {
     it("should retrieve a class by ID successfully", async () => {
+      const teacher = new User({
+        username: "teacher",
+        displayName: "Teacher",
+        email: "teacher@example.com",
+        password: "password",
+      });
+      await teacher.save();
+      const admin = new User({
+        username: "admin",
+        displayName: "Admin",
+        email: "admin@example.com",
+        password: "password",
+      });
+      await admin.save();
       const classData = {
         name: "Science 101",
-        teacher: new mongoose.Types.ObjectId(),
-        admins: [new mongoose.Types.ObjectId()],
+        teacher: teacher._id,
+        admins: [admin._id],
       };
       const newClass = await classService.createClass(classData);
       const retrievedClass = await classService.getClass(newClass._id);
       expect(retrievedClass).toBeDefined();
       expect(retrievedClass._id).toEqual(newClass._id);
       expect(retrievedClass.name).toBe(classData.name);
-      expect(retrievedClass.teacher).toEqual(classData.teacher);
-      expect(retrievedClass.admins).toEqual(classData.admins);
+      expect(retrievedClass.teacher.username).toBe(teacher.username);
+      expect(retrievedClass.teacher.displayName).toBe(teacher.displayName);
+      expect(retrievedClass.teacher.email).toBe(teacher.email);
+      expect(retrievedClass.admins[0].username).toBe(admin.username);
+      expect(retrievedClass.admins[0].displayName).toBe(admin.displayName);
+      expect(retrievedClass.admins[0].email).toBe(admin.email);
     });
 
     it("should return null if class does not exist", async () => {
@@ -72,45 +92,65 @@ describe("Class Service", () => {
 
   describe("getClasses", () => {
     it("should retrieve all classes for a given teacher ID", async () => {
-      const teacherId = new mongoose.Types.ObjectId();
+      const teacher = new User({
+        username: "teacher",
+        displayName: "Teacher",
+        email: "teacher@example.com",
+        password: "password",
+      });
+      await teacher.save();
       const classData1 = {
         name: "Math 101",
-        teacher: teacherId,
+        teacher: teacher._id,
         admins: [new mongoose.Types.ObjectId()],
       };
       const classData2 = {
         name: "Science 101",
-        teacher: teacherId,
+        teacher: teacher._id,
         admins: [new mongoose.Types.ObjectId()],
       };
       await classService.createClass(classData1);
       await classService.createClass(classData2);
 
-      const classes = await classService.getClasses(teacherId);
+      const classes = await classService.getClasses(teacher._id);
       expect(classes).toHaveLength(2);
-      expect(classes[0].teacher).toEqual(teacherId);
-      expect(classes[1].teacher).toEqual(teacherId);
+      expect(classes[0].teacher.username).toBe(teacher.username);
+      expect(classes[0].teacher.displayName).toBe(teacher.displayName);
+      expect(classes[0].teacher.email).toBe(teacher.email);
+      expect(classes[1].teacher.username).toBe(teacher.username);
+      expect(classes[1].teacher.displayName).toBe(teacher.displayName);
+      expect(classes[1].teacher.email).toBe(teacher.email);
     });
 
     it("should retrieve all classes for a given admin ID", async () => {
-      const adminId = new mongoose.Types.ObjectId();
+      const admin = new User({
+        username: "admin",
+        displayName: "Admin",
+        email: "admin@example.com",
+        password: "password",
+      });
+      await admin.save();
       const classData1 = {
         name: "Math 101",
         teacher: new mongoose.Types.ObjectId(),
-        admins: [adminId],
+        admins: [admin._id],
       };
       const classData2 = {
         name: "Science 101",
         teacher: new mongoose.Types.ObjectId(),
-        admins: [adminId],
+        admins: [admin._id],
       };
       await classService.createClass(classData1);
       await classService.createClass(classData2);
 
-      const classes = await classService.getClasses(adminId);
+      const classes = await classService.getClasses(admin._id);
       expect(classes).toHaveLength(2);
-      expect(classes[0].admins).toContainEqual(adminId);
-      expect(classes[1].admins).toContainEqual(adminId);
+      expect(classes[0].admins[0].username).toBe(admin.username);
+      expect(classes[0].admins[0].displayName).toBe(admin.displayName);
+      expect(classes[0].admins[0].email).toBe(admin.email);
+      expect(classes[1].admins[0].username).toBe(admin.username);
+      expect(classes[1].admins[0].displayName).toBe(admin.displayName);
+      expect(classes[1].admins[0].email).toBe(admin.email);
     });
 
     it("should return an empty array if no classes exist for the given teacher ID", async () => {
