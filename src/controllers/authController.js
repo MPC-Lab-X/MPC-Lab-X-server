@@ -11,8 +11,8 @@ const validationUtils = require("../utils/validationUtils");
 
 /**
  * @function registerUser - Handle user registration request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const registerUser = async (req, res) => {
   const { email, callbackUrl } = req.body;
@@ -45,8 +45,8 @@ const registerUser = async (req, res) => {
 
 /**
  * @function completeRegistration - Handle user registration completion request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const completeRegistration = async (req, res) => {
   const { token, username, password } = req.body;
@@ -115,8 +115,8 @@ const completeRegistration = async (req, res) => {
 
 /**
  * @function loginUser - Handle user login request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const loginUser = async (req, res) => {
   const { identifier, password } = req.body;
@@ -186,8 +186,8 @@ const loginUser = async (req, res) => {
 
 /**
  * @function refreshToken - Handle refresh token request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
@@ -226,8 +226,8 @@ const refreshToken = async (req, res) => {
 
 /**
  * @function resetPassword - Handle password reset request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const resetPassword = async (req, res) => {
   const { email, callbackUrl } = req.body;
@@ -274,8 +274,8 @@ const resetPassword = async (req, res) => {
 
 /**
  * @function completeResetPassword - Handle password reset completion request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const completeResetPassword = async (req, res) => {
   const { token, password } = req.body;

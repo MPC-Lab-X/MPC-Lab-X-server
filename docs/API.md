@@ -1518,11 +1518,11 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
 
   ```json
   {
-    "userId": "user_id"
+    "identifier": "email or username or user_id"
   }
   ```
 
-  > **Note:** The ID of the user to add as an admin.
+  > **Note:** The email, username, or ID of the user to add as an admin.
 
 - **Response**:
 

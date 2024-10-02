@@ -9,8 +9,8 @@ const problemGenerator = new ProblemGenerator();
 
 /**
  * @function getIndex - Get the problem generator index.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 getIndex = (req, res) => {
   res.success(index, "Problem generator index retrieved successfully.");
@@ -18,8 +18,8 @@ getIndex = (req, res) => {
 
 /**
  * @function generateProblem - Generate a new problem.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 generateProblem = (req, res) => {
   const topicsString = req.params[0];

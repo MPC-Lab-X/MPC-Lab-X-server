@@ -10,8 +10,8 @@ const validationUtils = require("../utils/validationUtils");
 
 /**
  * @function createClass - Create a new class.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const createClass = async (req, res) => {
   const teacherId = req.user.userId;
@@ -39,8 +39,8 @@ const createClass = async (req, res) => {
 
 /**
  * @function deleteClass - Delete a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const deleteClass = async (req, res) => {
   const teacherId = req.user.userId;
@@ -83,8 +83,8 @@ const deleteClass = async (req, res) => {
 
 /**
  * @function renameClass - Rename a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const renameClass = async (req, res) => {
   const userId = req.user.userId;
@@ -132,8 +132,8 @@ const renameClass = async (req, res) => {
 
 /**
  * @function getClasses - Get all classes by user ID (teacher or admin).
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const getClasses = async (req, res) => {
   const userId = req.user.userId;
@@ -152,8 +152,8 @@ const getClasses = async (req, res) => {
 
 /**
  * @function getClass - Get a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const getClass = async (req, res) => {
   const userId = req.user.userId;
@@ -190,13 +190,13 @@ const getClass = async (req, res) => {
 
 /**
  * @function addAdmin - Add an admin to a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const addAdmin = async (req, res) => {
   const teacherId = req.user.userId;
   const { id } = req.params;
-  const { userId } = req.body;
+  const { identifier } = req.body;
 
   // Check if class ID is valid
   if (!validationUtils.validateClassCode(id)) {
@@ -204,7 +204,10 @@ const addAdmin = async (req, res) => {
   }
 
   // Check if user ID is valid
-  const user = await userService.getUserById(userId);
+  const user =
+    (await userService.getUserById(identifier)) ||
+    (await userService.getUserByEmail(identifier)) ||
+    (await userService.getUserByUsername(identifier));
   if (!user) {
     return res.notFound("User not found.", "USER_NOT_FOUND");
   }
@@ -225,7 +228,7 @@ const addAdmin = async (req, res) => {
     }
 
     // Add admin to class
-    const updatedClass = await classService.addAdmin(id, userId);
+    const updatedClass = await classService.addAdmin(id, user._id);
     return res.success(updatedClass, "Admin added successfully.");
   } catch (error) {
     return res.internalServerError("Error adding admin.", "ADD_ADMIN_ERROR");
@@ -234,8 +237,8 @@ const addAdmin = async (req, res) => {
 
 /**
  * @function removeAdmin - Remove an admin from a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const removeAdmin = async (req, res) => {
   const teacherId = req.user.userId;
@@ -281,8 +284,8 @@ const removeAdmin = async (req, res) => {
 
 /**
  * @function addStudent - Add a student to a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const addStudent = async (req, res) => {
   const userId = req.user.userId;
@@ -330,8 +333,8 @@ const addStudent = async (req, res) => {
 
 /**
  * @function renameStudent - Rename a student in a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const renameStudent = async (req, res) => {
   const userId = req.user.userId;
@@ -388,8 +391,8 @@ const renameStudent = async (req, res) => {
 
 /**
  * @function deleteStudent - Delete a student from a class by ID.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
  */
 const deleteStudent = async (req, res) => {
   const userId = req.user.userId;
