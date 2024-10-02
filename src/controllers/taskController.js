@@ -45,7 +45,9 @@ const createTask = async (req, res) => {
 
   // Generate problems based on options
   const generateProblems = async (students, options) => {
-    const studentNumbers = students.map((student) => student.studentNumber);
+    const studentNumbers = students
+      .filter((student) => !student.deleted)
+      .map((student) => student.studentNumber);
 
     if (options.isIndividualTask) {
       delete options.isIndividualTask;
