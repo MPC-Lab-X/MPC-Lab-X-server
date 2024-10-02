@@ -10,8 +10,8 @@ const { hashPassword, verifyPassword } = require("./passwordHashService");
 /**
  * @function createUser - Create a new user.
  * @param {Object} user - The user object to create.
- * @returns {Promise<Object>} The created user object.
- * @throws {Error} Throws an error if the user fails to create.
+ * @returns {Promise<Object>} - The created user object.
+ * @throws {Error} - Throws an error if the user fails to create.
  */
 const createUser = async (user) => {
   try {
@@ -33,8 +33,8 @@ const createUser = async (user) => {
  * @function loginUser - Log in a user.
  * @param {string} identifier - The user's email or username.
  * @param {string} password - The user's password.
- * @returns {Promise<Object>} The logged in user object.
- * @throws {Error} Throws an error if the login fails.
+ * @returns {Promise<Object>} - The logged in user object.
+ * @throws {Error} - Throws an error if the login fails.
  */
 const loginUser = async (identifier, password) => {
   try {
@@ -61,8 +61,8 @@ const loginUser = async (identifier, password) => {
  * @function getRefreshTokenSecret - Get the refresh token secret for a user. (Secret key + user Password)
  * @param {string} userId - The user's ID.
  * @param {string} secret - The secret key.
- * @returns {string} The refresh token secret.
- * @throws {Error} Throws an error if the secret fails to get.
+ * @returns {string} - The refresh token secret.
+ * @throws {Error} - Throws an error if the secret fails to get.
  */
 const getRefreshTokenSecret = async (userId, secret) => {
   if (!mongoose.Types.ObjectId.isValid(userId))
@@ -80,8 +80,8 @@ const getRefreshTokenSecret = async (userId, secret) => {
 /**
  * @function getUserById - Get a user by ID.
  * @param {string} userId - The user's ID.
- * @returns {Promise<Object>} The user object.
- * @throws {Error} Throws an error if the user fails to get.
+ * @returns {Promise<Object>} - The user object.
+ * @throws {Error} - Throws an error if the user fails to get.
  */
 const getUserById = async (userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) return null;
@@ -98,8 +98,8 @@ const getUserById = async (userId) => {
 /**
  * @function getUserByEmail - Get a user by email.
  * @param {string} email - The user's email.
- * @returns {Promise<Object>} The user object.
- * @throws {Error} Throws an error if the user fails to get.
+ * @returns {Promise<Object>} - The user object.
+ * @throws {Error} - Throws an error if the user fails to get.
  */
 const getUserByEmail = async (email) => {
   try {
@@ -114,8 +114,8 @@ const getUserByEmail = async (email) => {
 /**
  * @function getUserByUsername - Get a user by username.
  * @param {string} username - The user's username.
- * @returns {Promise<Object>} The user object.
- * @throws {Error} Throws an error if the user fails to get.
+ * @returns {Promise<Object>} - The user object.
+ * @throws {Error} - Throws an error if the user fails to get.
  */
 const getUserByUsername = async (username) => {
   try {
@@ -131,8 +131,8 @@ const getUserByUsername = async (username) => {
  * @function updateUserById - Update a user by ID.
  * @param {string} userId - The user's ID.
  * @param {Object} update - The user object to update.
- * @returns {Promise<Object>} The updated user object.
- * @throws {Error} Throws an error if the user fails to update.
+ * @returns {Promise<Object>} - The updated user object.
+ * @throws {Error} - Throws an error if the user fails to update.
  */
 const updateUserById = async (userId, update) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) return null;
@@ -160,8 +160,8 @@ const updateUserById = async (userId, update) => {
  * @param {string} type - The type of safety record.
  * @param {string} ip - The IP address of the safety record.
  * @param {string} device - The device of the safety record.
- * @returns {Promise<Object>} The updated user object.
- * @throws {Error} Throws an error if the user fails to update.
+ * @returns {Promise<Object>} - The updated user object.
+ * @throws {Error} - Throws an error if the user fails to update.
  */
 const addSafetyRecordById = async (userId, type, ip, device) => {
   if (!mongoose.Types.ObjectId.isValid(userId))
@@ -197,8 +197,8 @@ const addSafetyRecordById = async (userId, type, ip, device) => {
  * @param {string} userId - The user's ID.
  * @param {number} limit - The number of safety records to return.
  * @param {number} offset - The number of safety records to skip.
- * @returns {Promise<Array>} The user's safety records.
- * @throws {Error} Throws an error if the user fails to get.
+ * @returns {Promise<Array>} - The user's safety records.
+ * @throws {Error} - Throws an error if the user fails to get.
  */
 const getSafetyRecordsById = async (userId, limit = 20, offset = 0) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) return null;

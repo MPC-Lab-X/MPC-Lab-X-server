@@ -9,8 +9,8 @@ const Task = require("../models/taskSchema");
 /**
  * @function createTask - Create a new task.
  * @param {Object} taskData - The task data to create.
- * @returns {Promise<Object>} The created task object.
- * @throws {Error} Throws an error if the task fails to create.
+ * @returns {Promise<Object>} - The created task object.
+ * @throws {Error} - Throws an error if the task fails to create.
  */
 const createTask = async (taskData) => {
   try {
@@ -32,8 +32,8 @@ const createTask = async (taskData) => {
 /**
  * @function getTasks - Get all tasks for a class.
  * @param {string} classId - The class ID.
- * @returns {Promise<Array>} The tasks array.
- * @throws {Error} Throws an error if the tasks fail to retrieve.
+ * @returns {Promise<Array>} - The tasks array.
+ * @throws {Error} - Throws an error if the tasks fail to retrieve.
  */
 const getTasks = async (classId) => {
   try {
@@ -50,8 +50,8 @@ const getTasks = async (classId) => {
 /**
  * @function getTask - Get a task by ID.
  * @param {string} taskId - The task ID.
- * @returns {Promise<Object>} The task object.
- * @throws {Error} Throws an error if the task fails to retrieve.
+ * @returns {Promise<Object>} - The task object.
+ * @throws {Error} - Throws an error if the task fails to retrieve.
  */
 const getTask = async (taskId) => {
   if (!mongoose.isValidObjectId(taskId)) return null;
@@ -69,8 +69,8 @@ const getTask = async (taskId) => {
  * @function getTaskProblems - Get the problems for a task.
  * @param {string} taskId - The task ID.
  * @param {number} studentNumber - The student number.
- * @returns {Promise<Array>} The problems array.
- * @throws {Error} Throws an error if the problems fail to retrieve.
+ * @returns {Promise<Array>} - The problems array.
+ * @throws {Error} - Throws an error if the problems fail to retrieve.
  */
 const getTaskProblems = async (taskId, studentNumber) => {
   if (!mongoose.isValidObjectId(taskId)) return null;
@@ -128,8 +128,8 @@ const updateGradingStatus = async (taskId, studentNumber, graded) => {
  * @function updateTaskName - Update the name of a task.
  * @param {string} taskId - The task ID.
  * @param {string} name - The new task name.
- * @returns {Promise<Object>} The updated task object.
- * @throws {Error} Throws an error if the task fails to update.
+ * @returns {Promise<Object>} - The updated task object.
+ * @throws {Error} - Throws an error if the task fails to update.
  */
 const updateTaskName = async (taskId, name) => {
   if (!mongoose.isValidObjectId(taskId)) return null;
@@ -155,8 +155,8 @@ const updateTaskName = async (taskId, name) => {
  * @function updateTaskDescription - Update the description of a task.
  * @param {string} taskId - The task ID.
  * @param {string} description - The new task description.
- * @returns {Promise<Object>} The updated task object.
- * @throws {Error} Throws an error if the task fails to update.
+ * @returns {Promise<Object>} - The updated task object.
+ * @throws {Error} - Throws an error if the task fails to update.
  */
 const updateTaskDescription = async (taskId, description) => {
   if (!mongoose.isValidObjectId(taskId)) return null;
@@ -181,8 +181,8 @@ const updateTaskDescription = async (taskId, description) => {
 /**
  * @function deleteTask - Delete a task.
  * @param {string} taskId - The task ID.
- * @returns {Promise<Object>} The deleted task object.
- * @throws {Error} Throws an error if the task fails to delete.
+ * @returns {Promise<Object>} - The deleted task object.
+ * @throws {Error} - Throws an error if the task fails to delete.
  */
 const deleteTask = async (taskId) => {
   if (!mongoose.isValidObjectId(taskId)) return null;

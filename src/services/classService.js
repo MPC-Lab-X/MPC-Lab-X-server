@@ -9,8 +9,8 @@ const Class = require("../models/classSchema");
 /**
  * @function createClass - Create a new class.
  * @param {Object} classData - The class data to create.
- * @returns {Promise<Object>} The created class object.
- * @throws {Error} Throws an error if the class fails to create.
+ * @returns {Promise<Object>} - The created class object.
+ * @throws {Error} - Throws an error if the class fails to create.
  */
 const createClass = async (classData) => {
   try {
@@ -26,8 +26,8 @@ const createClass = async (classData) => {
 /**
  * @function getClass - Get a class by ID.
  * @param {string} classId - The class ID.
- * @returns {Promise<Object>} The class object.
- * @throws {Error} Throws an error if the class fails to retrieve.
+ * @returns {Promise<Object>} - The class object.
+ * @throws {Error} - Throws an error if the class fails to retrieve.
  */
 const getClass = async (classId) => {
   try {
@@ -44,8 +44,8 @@ const getClass = async (classId) => {
 /**
  * @function getClasses - Get all classes by user ID (teacher or admin).
  * @param {string} userId - The user ID.
- * @returns {Promise<Array>} The array of class objects.
- * @throws {Error} Throws an error if the classes fail to retrieve.
+ * @returns {Promise<Array>} - The array of class objects.
+ * @throws {Error} - Throws an error if the classes fail to retrieve.
  */
 const getClasses = async (userId) => {
   if (!mongoose.isValidObjectId(userId)) {
@@ -70,8 +70,8 @@ const getClasses = async (userId) => {
  * @function renameClass - Rename a class.
  * @param {string} classId - The class ID.
  * @param {string} name - The new class name.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the class fails to rename.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the class fails to rename.
  */
 const renameClass = async (classId, name) => {
   try {
@@ -91,8 +91,8 @@ const renameClass = async (classId, name) => {
  * @function addAdmin - Add an admin to a class.
  * @param {string} classId - The class ID.
  * @param {string} userId - The user ID.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the admin fails to add.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the admin fails to add.
  */
 const addAdmin = async (classId, userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId))
@@ -115,8 +115,8 @@ const addAdmin = async (classId, userId) => {
  * @function removeAdmin - Remove an admin from a class.
  * @param {string} classId - The class ID.
  * @param {string} userId - The user ID.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the admin fails to remove.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the admin fails to remove.
  */
 const removeAdmin = async (classId, userId) => {
   if (!mongoose.Types.ObjectId.isValid(userId))
@@ -139,8 +139,8 @@ const removeAdmin = async (classId, userId) => {
  * @function addStudent - Add a student to a class.
  * @param {string} classId - The class ID.
  * @param {string} name - The student name.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the student fails to add.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the student fails to add.
  */
 const addStudent = async (classId, name) => {
   try {
@@ -164,8 +164,8 @@ const addStudent = async (classId, name) => {
  * @param {string} classId - The class ID.
  * @param {number} studentNumber - The student number.
  * @param {string} name - The new student name.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the student fails to rename.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the student fails to rename.
  */
 const renameStudent = async (classId, studentNumber, name) => {
   try {
@@ -189,8 +189,8 @@ const renameStudent = async (classId, studentNumber, name) => {
  * @function deleteStudent - Delete a student from a class. (soft delete)
  * @param {string} classId - The class ID.
  * @param {number} studentNumber - The student number.
- * @returns {Promise<Object>} The updated class object.
- * @throws {Error} Throws an error if the student fails to delete.
+ * @returns {Promise<Object>} - The updated class object.
+ * @throws {Error} - Throws an error if the student fails to delete.
  */
 const deleteStudent = async (classId, studentNumber) => {
   try {
@@ -212,8 +212,8 @@ const deleteStudent = async (classId, studentNumber) => {
 /**
  * @function deleteClass - Delete a class. (soft delete)
  * @param {string} classId - The class ID.
- * @returns {Promise<Object>} The deleted class object.
- * @throws {Error} Throws an error if the class fails to delete.
+ * @returns {Promise<Object>} - The deleted class object.
+ * @throws {Error} - Throws an error if the class fails to delete.
  */
 const deleteClass = async (classId) => {
   try {
