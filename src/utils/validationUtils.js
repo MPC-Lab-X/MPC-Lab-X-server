@@ -8,7 +8,7 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])[^\s]{8,}$/; /
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,}$/; // Check if the username is valid (at least 3 characters, alphanumeric characters and underscores only)
 const DISPLAY_NAME_REGEX = /^(?!.*\s{2,})[^\s](.{0,18}[^\s])?$|^$/; // Check if the display name is valid (no more than 20 characters, no leading or trailing spaces, no consecutive spaces)
 const CLASS_CODE_REGEX = /^[A-Z0-9]{6}$/; // Check if the class code is valid (exactly 6 characters, uppercase letters and numbers only)
-const CLASS_NAME_REGEX = /^[a-zA-Z0-9\s]{1,50}$/; // Check if the class name is valid (at least 1 character, alphanumeric characters and spaces only)
+const CLASS_NAME_REGEX = /^(?!\s*$)[a-zA-Z0-9\s]{1,50}$/; // Check if the class name is valid (at least 1 character, alphanumeric characters and spaces only, cannot be empty or just spaces or symbols)
 const STUDENT_NAME_REGEX = /^(?!.*\s{2,})[^\s](.{0,18}[^\s])?$|^$/; // Check if the student name is valid (no more than 20 characters, no leading or trailing spaces, no consecutive spaces)
 const TASK_NAME_REGEX = /^[a-zA-Z0-9\s]{1,50}$/; // Check if the task name is valid (at least 1 character, alphanumeric characters and spaces only)
 const TASK_DESCRIPTION_REGEX = /^[a-zA-Z0-9\s]{1,500}$/; // Check if the task description is valid (at least 1 character, alphanumeric characters and spaces only)
