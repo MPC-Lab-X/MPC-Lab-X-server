@@ -51,7 +51,7 @@ const createTask = async (req, res) => {
       .map((student) => student.studentNumber);
 
     if (!studentNumbers.length) {
-      return res.badRequest("No students found in class.", "NO_STUDENTS_FOUND");
+      return null;
     }
 
     if (options.isIndividualTask) {
@@ -105,6 +105,11 @@ const createTask = async (req, res) => {
       classData.students,
       options
     );
+
+    if (!generatedProblems) {
+      return res.badRequest("No students found in class.", "NO_STUDENTS_FOUND");
+    }
+
     const task = await createTask({
       classId,
       name,
