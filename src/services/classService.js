@@ -58,7 +58,8 @@ const getClasses = async (userId) => {
       deleted: false,
     })
       .populate("teacher", "username displayName email")
-      .populate("admins", "username displayName email");
+      .populate("admins", "username displayName email")
+      .sort({ updatedAt: -1 });
     return classes;
   } catch (error) {
     console.error("Error in getting classes: ", error);
