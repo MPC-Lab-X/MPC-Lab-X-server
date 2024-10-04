@@ -138,7 +138,9 @@ describe("TaskController - createTask", () => {
     validationUtils.validateTaskName.mockReturnValue(true);
     validationUtils.validateTaskDescription.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
       students: [{ studentNumber: "456" }],
     });
@@ -165,7 +167,9 @@ describe("TaskController - createTask", () => {
     validationUtils.validateTaskName.mockReturnValue(true);
     validationUtils.validateTaskDescription.mockReturnValue(true);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
       students: [{ studentNumber: "123" }],
     });
     problemGenerator.generate.mockReturnValue([{ problem: "problem1" }]);
@@ -221,7 +225,9 @@ describe("TaskController - getTasks", () => {
   it("should return 403 if user is not authorized to get tasks", async () => {
     const classId = "validClassId";
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -235,7 +241,9 @@ describe("TaskController - getTasks", () => {
   it("should return 500 if there is an error in retrieving tasks", async () => {
     const classId = "validClassId";
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.getTasks.mockRejectedValue(new Error("Error"));
 
@@ -253,7 +261,9 @@ describe("TaskController - getTasks", () => {
       { _id: "taskId2", name: "Task 2" },
     ];
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.getTasks.mockResolvedValue(tasks);
 
@@ -293,7 +303,9 @@ describe("TaskController - getTask", () => {
     const taskId = "validTaskId";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -320,7 +332,9 @@ describe("TaskController - getTask", () => {
     const task = { _id: taskId, name: "Task 1", classId: "validClassId" };
     taskService.getTask.mockResolvedValue(task);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
 
     const response = await request(app).get(`/api/tasks/${taskId}`);
@@ -368,7 +382,9 @@ describe("TaskController - getTaskProblems", () => {
     const studentNumber = "123";
     taskService.getTaskProblems.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -403,7 +419,9 @@ describe("TaskController - getTaskProblems", () => {
     const problems = { problems: ["problem1", "problem2"] };
     taskService.getTaskProblems.mockResolvedValue(problems);
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
 
     const response = await request(app).get(
@@ -468,7 +486,9 @@ describe("TaskController - updateGradingStatus", () => {
     const graded = true;
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -489,7 +509,9 @@ describe("TaskController - updateGradingStatus", () => {
     const graded = true;
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateGradingStatus.mockRejectedValue(new Error("Error"));
 
@@ -509,7 +531,9 @@ describe("TaskController - updateGradingStatus", () => {
     const updatedTask = { _id: taskId, graded };
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateGradingStatus.mockResolvedValue(updatedTask);
 
@@ -560,7 +584,9 @@ describe("TaskController - renameTask", () => {
     const taskName = "New Task Name";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -580,7 +606,9 @@ describe("TaskController - renameTask", () => {
     const taskName = "New Task Name";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateTaskName.mockRejectedValue(new Error("Error"));
 
@@ -598,7 +626,9 @@ describe("TaskController - renameTask", () => {
     const taskName = "New Task Name";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateTaskName.mockResolvedValue({
       _id: taskId,
@@ -650,7 +680,9 @@ describe("TaskController - updateDescription", () => {
     const description = "New Description";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -670,7 +702,9 @@ describe("TaskController - updateDescription", () => {
     const description = "New Description";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateTaskDescription.mockRejectedValue(new Error("Error"));
 
@@ -689,7 +723,9 @@ describe("TaskController - updateDescription", () => {
     const updatedTask = { _id: taskId, description };
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.updateTaskDescription.mockResolvedValue(updatedTask);
 
@@ -733,7 +769,9 @@ describe("TaskController - deleteTask", () => {
     const taskId = "validTaskId";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "otherUserId",
+      teacher: {
+        _id: "otherUserId",
+      },
       admins: [],
     });
 
@@ -750,7 +788,9 @@ describe("TaskController - deleteTask", () => {
     const taskId = "validTaskId";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.deleteTask.mockRejectedValue(new Error("Error"));
 
@@ -765,7 +805,9 @@ describe("TaskController - deleteTask", () => {
     const taskId = "validTaskId";
     taskService.getTask.mockResolvedValue({ classId: "validClassId" });
     classService.getClass.mockResolvedValue({
-      teacher: "userId",
+      teacher: {
+        _id: "userId",
+      },
     });
     taskService.deleteTask.mockResolvedValue({ _id: taskId });
 

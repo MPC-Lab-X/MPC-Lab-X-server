@@ -24,7 +24,6 @@ describe("ClassController - createClass", () => {
   it("should return 400 if class name is invalid", async () => {
     const classData = {
       name: "",
-      teacher: "123456789012345678901234",
     };
     validationUtils.validateClassName.mockReturnValue(false);
 
@@ -38,7 +37,6 @@ describe("ClassController - createClass", () => {
   it("should return 200 if class is created", async () => {
     const classData = {
       name: "Test Class",
-      teacher: "123456789012345678901234",
     };
     validationUtils.validateClassName.mockReturnValue(true);
     classService.createClass.mockResolvedValue(classData);
@@ -53,7 +51,6 @@ describe("ClassController - createClass", () => {
   it("should return 500 if class fails to create", async () => {
     const classData = {
       name: "Test Class",
-      teacher: "123456789012345678901234",
     };
     validationUtils.validateClassName.mockReturnValue(true);
     classService.createClass.mockRejectedValue(new Error("Error"));

@@ -18,7 +18,8 @@ const validationUtils = require("../utils/validationUtils");
  */
 const createTask = async (req, res) => {
   const userId = req.user.userId;
-  const { classId, name, description, options } = req.body;
+  const { classId } = req.params;
+  const { name, description, options } = req.body;
 
   // Check if class ID is valid
   if (!validationUtils.validateClassCode(classId)) {
@@ -48,6 +49,10 @@ const createTask = async (req, res) => {
     const studentNumbers = students
       .filter((student) => !student.deleted)
       .map((student) => student.studentNumber);
+
+    if (!studentNumbers.length) {
+      return res.badRequest("No students found in class.", "NO_STUDENTS_FOUND");
+    }
 
     if (options.isIndividualTask) {
       delete options.isIndividualTask;
@@ -87,8 +92,8 @@ const createTask = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to create task.",
@@ -133,8 +138,8 @@ const getTasks = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to get tasks.",
@@ -176,8 +181,8 @@ const getTask = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to get task.",
@@ -217,8 +222,8 @@ const getTaskProblems = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to get problems.",
@@ -263,8 +268,8 @@ const updateGradingStatus = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to update grading status.",
@@ -315,8 +320,8 @@ const renameTask = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to rename task.",
@@ -370,8 +375,8 @@ const updateDescription = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to update task description.",
@@ -416,8 +421,8 @@ const deleteTask = async (req, res) => {
 
     // Check if teacher is the class teacher
     if (
-      classData.teacher.toString() !== userId &&
-      !classData.admins.includes(userId)
+      classData.teacher._id.toString() !== userId &&
+      !classData.admins.some((admin) => admin._id.toString() === userId)
     ) {
       return res.forbidden(
         "You are not authorized to delete task.",

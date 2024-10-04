@@ -2120,6 +2120,19 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
     }
     ```
 
+  - **Status:** `400 Bad Request`
+
+    ```json
+    {
+      "status": "error",
+      "message": "No students found in class.",
+      "error": {
+        "code": "NO_STUDENTS_FOUND",
+        "details": {}
+      }
+    }
+    ```
+
   - **Status:** `404 Not Found`
 
     ```json
