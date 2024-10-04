@@ -1309,7 +1309,7 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
 
   ```json
   {
-    "className": "new_class_name"
+    "name": "new_class_name"
   }
   ```
 
