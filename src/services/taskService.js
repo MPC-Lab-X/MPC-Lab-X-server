@@ -37,9 +37,9 @@ const createTask = async (taskData) => {
  */
 const getTasks = async (classId) => {
   try {
-    const tasks = await Task.find({ classId }).select(
-      "classId name description"
-    );
+    const tasks = await Task.find({ classId })
+      .select("classId name description")
+      .sort({ updatedAt: -1 });
     return tasks;
   } catch (error) {
     console.error("Error in getting tasks: ", error);
