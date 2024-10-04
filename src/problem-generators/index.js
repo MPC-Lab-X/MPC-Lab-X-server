@@ -96,9 +96,15 @@ class ProblemGenerator {
     const problems = [];
 
     try {
+      if (!options.topics || options.topics.length === 0) {
+        throw new Error("No topics specified");
+      }
+
       for (const topic of options.topics) {
         const path = topic.path;
         const topicOptions = topic.options;
+
+        const count = Math.min(topicOptions.count || 5, this.maxCount);
 
         const generator = path.reduce((acc, cur) => acc[cur], this.generators);
         const parameters = path.reduce((acc, cur) => acc[cur], this.parameters);
@@ -119,7 +125,6 @@ class ProblemGenerator {
           }
         }
 
-        const count = Math.min(topicOptions.count || 5, this.maxCount);
         delete topicOptions.count;
         const topicProblems = [];
         for (let i = 0; i < count; i++) {
