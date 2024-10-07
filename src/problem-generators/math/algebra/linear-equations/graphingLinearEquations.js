@@ -27,7 +27,6 @@ const generateProblem = (options) => {
   const absY1 = Math.abs(y1);
   const absX1 = Math.abs(x1);
 
-  // Randomly select the type of equation to use based on options
   const forms = [];
   if (options.includeStandard) forms.push("standard");
   if (options.includeSlopeIntercept) forms.push("slopeIntercept");
@@ -35,17 +34,28 @@ const generateProblem = (options) => {
 
   const selectedForm = forms.length > 0 ? randomElement(forms) : "standard";
 
+  let xIntercept = null,
+    yIntercept = null;
   switch (selectedForm) {
-    case "standard":
+    case "standard": {
       const a = randomInt(-5, 5);
-      equation = `${a}x ${bSign} ${absB}y = ${b * x1 + a * y1}`; // Form ax + by = c
+      equation = `${a}x ${bSign} ${absB}y = ${b * x1 + a * y1}`;
+      if (a !== 0) xIntercept = (b * x1 + a * y1) / a;
+      if (b !== 0) yIntercept = (b * x1 + a * y1) / b;
       break;
-    case "slopeIntercept":
-      equation = `y = ${m}x ${bSign} ${absB}`; // Form y = mx + b
+    }
+    case "slopeIntercept": {
+      equation = `y = ${m}x ${bSign} ${absB}`;
+      xIntercept = m !== 0 ? -b / m : null;
+      yIntercept = b;
       break;
-    case "pointSlope":
-      equation = `y ${y1Sign} ${absY1} = ${m}(x ${x1Sign} ${absX1})`; // Form y - y1 = m(x - x1)
+    }
+    case "pointSlope": {
+      equation = `y ${y1Sign} ${absY1} = ${m}(x ${x1Sign} ${absX1})`;
+      xIntercept = m !== 0 ? (y1 - m * x1) / m : null;
+      yIntercept = y1;
       break;
+    }
   }
 
   const problem = [
@@ -61,10 +71,56 @@ const generateProblem = (options) => {
 
   const steps = [];
 
+  // Initialize default bounds
+  let xMin = -10,
+    xMax = 10,
+    yMin = -10,
+    yMax = 10;
+  const padding = 2; // Additional padding to give a little extra space around the graph
+
+  // Adjust mathBounds based on intercepts, ensuring they are visible and adding padding
+  if (xIntercept !== null && !isNaN(xIntercept)) {
+    xMin = Math.min(xMin, Math.floor(xIntercept) - padding);
+    xMax = Math.max(xMax, Math.ceil(xIntercept) + padding);
+  }
+  if (yIntercept !== null && !isNaN(yIntercept)) {
+    yMin = Math.min(yMin, Math.floor(yIntercept) - padding);
+    yMax = Math.max(yMax, Math.ceil(yIntercept) + padding);
+  }
+
+  // Adjust the height and width based on the intercepts
+  const xRange = xMax - xMin;
+  const yRange = yMax - yMin;
+
+  // Maintain a reasonable aspect ratio for the graph (optional step)
+  if (xRange > yRange) {
+    const diff = xRange - yRange;
+    yMin -= diff / 2;
+    yMax += diff / 2;
+  } else if (yRange > xRange) {
+    const diff = yRange - xRange;
+    xMin -= diff / 2;
+    xMax += diff / 2;
+  }
+
   const solution = [
     {
       type: "graph",
-      value: equation,
+      value: {
+        renderEngine: "desmos",
+        expressions: [
+          {
+            type: "expression",
+            latex: equation,
+          },
+        ],
+        mathBounds: {
+          left: xMin,
+          right: xMax,
+          bottom: yMin,
+          top: yMax,
+        },
+      },
     },
   ];
 

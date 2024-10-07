@@ -63,7 +63,14 @@ const generateProblem = (options) => {
     {
       type: "numeric",
       decimal: math.evaluate(math.format(simplified)),
-      fraction: simplifiedFraction.d === 1 ? null : simplifiedFraction,
+      fraction:
+        simplifiedFraction.d === 1
+          ? null
+          : {
+              s: simplifiedFraction.s,
+              n: simplifiedFraction.n,
+              d: simplifiedFraction.d,
+            },
     },
   ];
 

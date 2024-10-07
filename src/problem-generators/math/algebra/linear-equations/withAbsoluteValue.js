@@ -94,12 +94,26 @@ const generateProblem = (options) => {
     {
       type: "numeric",
       decimal: math.evaluate(solution1),
-      fraction: simplifiedFraction1.d === 1 ? null : simplifiedFraction1,
+      fraction:
+        simplifiedFraction1.d === 1
+          ? null
+          : {
+              s: simplifiedFraction1.s,
+              n: simplifiedFraction1.n,
+              d: simplifiedFraction1.d,
+            },
     },
     {
       type: "numeric",
       decimal: math.evaluate(solution2),
-      fraction: simplifiedFraction2.d === 1 ? null : simplifiedFraction2,
+      fraction:
+        simplifiedFraction2.d === 1
+          ? null
+          : {
+              s: simplifiedFraction2.s,
+              n: simplifiedFraction2.n,
+              d: simplifiedFraction2.d,
+            },
     },
   ];
 

@@ -111,7 +111,7 @@ const generateProblem = (options) => {
         value: `Which of the following represents the slope and point of the line?`,
       },
       { type: "formula", value: equation },
-      { type: "mcq", value: choices },
+      { type: "options", value: choices },
     ];
 
     const solution = [
