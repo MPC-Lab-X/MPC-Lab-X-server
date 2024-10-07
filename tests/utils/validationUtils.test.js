@@ -389,8 +389,16 @@ describe("validateTaskName", () => {
     expect(validateTaskName("a".repeat(51))).toBe(false);
   });
 
-  test("should return false for a task name with special characters", () => {
-    expect(validateTaskName("Task@Name!")).toBe(false);
+  test("should return false for a task name with leading spaces", () => {
+    expect(validateTaskName(" leading")).toBe(false);
+  });
+
+  test("should return false for a task name with consecutive spaces", () => {
+    expect(validateTaskName("consecutive  spaces")).toBe(false);
+  });
+
+  test("should return true for a task name with special characters", () => {
+    expect(validateTaskName("Task-Name | 123")).toBe(true);
   });
 
   test("should return true for a valid task name with alphanumeric characters", () => {
@@ -419,8 +427,16 @@ describe("validateTaskDescription", () => {
     expect(validateTaskDescription("a".repeat(501))).toBe(false);
   });
 
-  test("should return false for a task description with special characters", () => {
-    expect(validateTaskDescription("Task@Description!")).toBe(false);
+  test("should return false for a task description with leading spaces", () => {
+    expect(validateTaskDescription(" leading")).toBe(false);
+  });
+
+  test("should return false for a task description with consecutive spaces", () => {
+    expect(validateTaskDescription("consecutive  spaces")).toBe(false);
+  });
+
+  test("should return true for a task description with special characters", () => {
+    expect(validateTaskDescription("Task@Description!")).toBe(true);
   });
 
   test("should return true for a valid task description with alphanumeric characters", () => {
