@@ -120,12 +120,11 @@ class ProblemGenerator {
         }
 
         for (const key in topicOptions) {
-          if (parameters[key] === undefined) {
+          if (parameters[key] === undefined && key !== "count") {
             delete topicOptions[key];
           }
         }
 
-        delete topicOptions.count;
         const topicProblems = [];
         for (let i = 0; i < count; i++) {
           const problem = generator(topicOptions);
