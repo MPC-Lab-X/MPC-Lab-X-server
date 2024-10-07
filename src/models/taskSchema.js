@@ -12,14 +12,12 @@ const userTaskSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    problems: [
-      {
-        type: String,
-        required: true,
-        default: "[]",
-        select: false,
-      },
-    ],
+    problems: {
+      type: String,
+      required: true,
+      default: "[]",
+      select: false,
+    },
     graded: {
       type: Boolean,
       default: false,
