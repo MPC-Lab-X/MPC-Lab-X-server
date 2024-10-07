@@ -214,13 +214,17 @@ const getTaskProblems = async (req, res) => {
   const { id, studentNumber } = req.params;
 
   try {
-    const task = await taskService.getTaskProblems(id, studentNumber);
+    const task = await taskService.getTaskProblems(id, parseInt(studentNumber));
 
     if (!task) {
       return res.notFound("Problems not found.", "PROBLEMS_NOT_FOUND");
     }
 
-    const classData = await classService.getClass(task.classId);
+    const classData = await classService.getClass(
+      (
+        await taskService.getTask(id)
+      ).classId
+    );
     if (!classData) {
       return res.notFound("Class not found.", "CLASS_NOT_FOUND");
     }
@@ -238,6 +242,12 @@ const getTaskProblems = async (req, res) => {
 
     return res.success(task, "Problems retrieved successfully.");
   } catch (error) {
+    if (
+      error.message === "Task not found" ||
+      error.message === "User task not found"
+    ) {
+      return res.notFound("Problems not found.", "PROBLEMS_NOT_FOUND");
+    }
     return res.internalServerError(
       "Error in retrieving problems.",
       "PROBLEMS_RETRIEVAL_ERROR"
@@ -284,7 +294,7 @@ const updateGradingStatus = async (req, res) => {
 
     const task = await taskService.updateGradingStatus(
       id,
-      studentNumber,
+      parseInt(studentNumber),
       graded
     );
 
