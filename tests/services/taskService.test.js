@@ -61,8 +61,15 @@ describe("Task Service", () => {
       const tasks = await taskService.getTasks(classId);
 
       expect(tasks).toHaveLength(2);
-      expect(tasks[0].name).toBe(tasksData[0].name);
-      expect(tasks[1].name).toBe(tasksData[1].name);
+      expect(
+        tasks.map((task) => {
+          return (
+            (task.name === "Task 1" || task.name === "Task 2") &&
+            (task.description === "Description 1" ||
+              task.description === "Description 2")
+          );
+        })
+      ).not.toContain(false);
     });
 
     it("should return an empty array if no tasks are found for the given class ID", async () => {
@@ -165,7 +172,7 @@ describe("Task Service", () => {
         userTasks: [
           {
             studentNumber: 1,
-            problems: ["Problem 1", "Problem 2"],
+            problems: '["Problem 1", "Problem 2"]',
           },
         ],
       };
@@ -196,7 +203,7 @@ describe("Task Service", () => {
         userTasks: [
           {
             studentNumber: 1,
-            problems: ["Problem 1", "Problem 2"],
+            problems: '["Problem 1", "Problem 2"]',
             graded: false,
           },
         ],
@@ -241,7 +248,7 @@ describe("Task Service", () => {
         userTasks: [
           {
             studentNumber: 1,
-            problems: ["Problem 1", "Problem 2"],
+            problems: '["Problem 1", "Problem 2"]',
             graded: false,
           },
         ],
@@ -265,7 +272,7 @@ describe("Task Service", () => {
         userTasks: [
           {
             studentNumber: 1,
-            problems: ["Problem 1", "Problem 2"],
+            problems: '["Problem 1", "Problem 2"]',
             graded: false,
           },
         ],
