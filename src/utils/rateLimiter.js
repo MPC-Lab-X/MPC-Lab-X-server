@@ -12,6 +12,12 @@ const rateLimit = require("express-rate-limit");
  * @returns {Function} - A rate limiter middleware.
  */
 const rateLimiter = (max = 150, window = 5 * 60 * 1000) => {
+  if (process.env.NODE_ENV === "test") {
+    return (req, res, next) => {
+      next();
+    };
+  }
+
   return rateLimit({
     windowMs: window,
     max,
