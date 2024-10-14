@@ -3,8 +3,7 @@
  * @description Controller for problem generation.
  */
 
-const index = require("../problem-generators/index.json");
-const ProblemGenerator = require("../problem-generators");
+const ProblemGenerator = require("mpclab");
 const problemGenerator = new ProblemGenerator();
 
 /**
@@ -13,7 +12,10 @@ const problemGenerator = new ProblemGenerator();
  * @param {Response} res - The response object.
  */
 getIndex = (req, res) => {
-  res.success(index, "Problem generator index retrieved successfully.");
+  res.success(
+    problemGenerator.index,
+    "Problem generator index retrieved successfully."
+  );
 };
 
 /**
@@ -22,12 +24,12 @@ getIndex = (req, res) => {
  * @param {Response} res - The response object.
  */
 generateProblem = (req, res) => {
-  const topicsString = req.params[0];
-  const { options } = req.query;
-
-  const topics = topicsString.split("/");
-
   try {
+    const topicsString = req.params[0];
+    const options = JSON.parse(req.query.options || "{}");
+
+    const topics = topicsString.split("/");
+
     const problem = problemGenerator.generateOne({
       path: topics,
       options: options,

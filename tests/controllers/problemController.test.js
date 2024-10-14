@@ -4,10 +4,11 @@
  */
 
 const problemController = require("../../src/controllers/problemController");
-const problemGenerator = require("../../src/problem-generators");
-const index = require("../../src/problem-generators/index.json");
+const ProblemGenerator = require("mpclab");
+const problemGenerator = new ProblemGenerator();
+const index = problemGenerator.index;
 
-jest.mock("../../src/problem-generators");
+jest.mock("mpclab");
 
 describe("ProblemController - getIndex", () => {
   it("should return the problem generator index successfully", () => {
@@ -37,11 +38,11 @@ describe("ProblemController - generateProblem", () => {
       internalServerError: jest.fn(),
     };
     const generatedProblem = { problem: "generatedProblem" };
-    problemGenerator.prototype.generateOne.mockReturnValue(generatedProblem);
+    ProblemGenerator.prototype.generateOne.mockReturnValue(generatedProblem);
 
     problemController.generateProblem(req, res);
 
-    expect(problemGenerator.prototype.generateOne).toHaveBeenCalledWith({
+    expect(ProblemGenerator.prototype.generateOne).toHaveBeenCalledWith({
       path: ["topic1", "topic2"],
       options: "someOptions",
     });
@@ -61,7 +62,7 @@ describe("ProblemController - generateProblem", () => {
       notFound: jest.fn(),
       internalServerError: jest.fn(),
     };
-    problemGenerator.prototype.generateOne.mockImplementation(() => {
+    ProblemGenerator.prototype.generateOne.mockImplementation(() => {
       throw new Error("Generator not found");
     });
 
@@ -83,7 +84,7 @@ describe("ProblemController - generateProblem", () => {
       notFound: jest.fn(),
       internalServerError: jest.fn(),
     };
-    problemGenerator.prototype.generateOne.mockImplementation(() => {
+    ProblemGenerator.prototype.generateOne.mockImplementation(() => {
       throw new Error("Some other error");
     });
 

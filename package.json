@@ -6,6 +6,7 @@
     "jsonwebtoken": "^9.0.2",
     "mathjs": "^13.1.1",
     "mongoose": "^8.6.2",
+    "mpclab": "^0.1.0",
     "nodemailer": "^6.9.15"
   },
   "devDependencies": {
@@ -15,6 +16,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --verbose --silent --coverage --forceExit --config=tests/jest.config.js"
+    "test": "jest --verbose --silent --coverage --ci --forceExit --config=tests/jest.config.js"
   }
 }

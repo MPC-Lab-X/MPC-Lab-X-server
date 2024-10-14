@@ -6,7 +6,7 @@
 const taskService = require("../services/taskService");
 const classService = require("../services/classService");
 
-const ProblemGenerator = require("../problem-generators");
+const ProblemGenerator = require("mpclab");
 const problemGenerator = new ProblemGenerator();
 
 const validationUtils = require("../utils/validationUtils");

@@ -2856,7 +2856,9 @@ The API uses JWT (JSON Web Token) for authentication. To access protected routes
 
 - **Query Parameters**:
 
-  - `options`: The problem generation options.
+  - `options`: The problem generation options. (Optional, object (Use JSON string))
+
+  > **Note:** The problem generation options are passed as a query parameter. Please use `JSON.stringify` to pass the object.
 
 - **Response**:
 

@@ -65,6 +65,18 @@ The server uses Jest for testing. To run the tests, use the following command.
 npm test
 ```
 
+## Acknowledgements
+
+We would like to thank the following libraries and tools for making this project possible:
+
+- [Express.js](https://expressjs.com/): A fast, unopinionated, minimalist web framework for Node.js.
+- [MongoDB](https://www.mongodb.com/): A NoSQL database program that uses JSON-like documents with optional schemas.
+- [Jest](https://jestjs.io/): A delightful JavaScript testing framework with a focus on simplicity.
+- [Nodemailer](https://nodemailer.com/): A module for Node.js to send emails easily.
+- [JWT](https://jwt.io/): A compact, URL-safe means of representing claims to be transferred between two parties.
+- [bcrypt](https://www.npmjs.com/package/bcrypt): A library to help you hash passwords.
+- [mpclab](https://www.npmjs.com/package/mpclab): A problem generator for mathematics, physics, and chemistry.
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.

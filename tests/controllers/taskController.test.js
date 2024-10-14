@@ -20,9 +20,9 @@ jest.mock("../../src/services/taskService");
 jest.mock("../../src/services/classService");
 jest.mock("../../src/utils/validationUtils");
 
-const ProblemGenerator = require("../../src/problem-generators");
+const ProblemGenerator = require("mpclab");
 const problemGenerator = new ProblemGenerator();
-jest.mock("../../src/problem-generators");
+jest.mock("mpclab");
 
 describe("TaskController - createTask", () => {
   it("should return 400 if class ID is invalid", async () => {
