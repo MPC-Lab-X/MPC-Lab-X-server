@@ -9,6 +9,7 @@ MPC-Lab-X-server is the backend component of the MPC-Lab-X project. It handles q
 - Supports multiple categories and detailed sub-types of questions.
 - Uses Express.js for API handling and MongoDB for data storage.
 - Supports user authentication and session management.
+- Classroom creation, student management, TA/admin management, task creation/management (using mpclab library for problem generation), and task grading.
 
 ## Prerequisites
 
