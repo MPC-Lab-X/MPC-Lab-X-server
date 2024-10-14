@@ -6,10 +6,16 @@
 const express = require("express");
 const router = express.Router();
 
+const rateLimiter = require("../utils/rateLimiter");
+
 const problemController = require("../controllers/problemController");
 
-router.get("/", problemController.getIndex);
+router.get("/", rateLimiter(), problemController.getIndex);
 
-router.get("/*", problemController.generateProblem);
+router.get(
+  "/*",
+  rateLimiter(100, 5 * 60 * 1000),
+  problemController.generateProblem
+);
 
 module.exports = router;

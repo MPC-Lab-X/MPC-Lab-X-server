@@ -6,6 +6,33 @@ The server provides a RESTful API for question generation, problem solving, and 
 
 The API uses JWT (JSON Web Token) for authentication. To access protected routes, the client must include a valid JWT token in the `Authorization` header of the HTTP request. (Access tokens are valid for 15 minutes, and refresh tokens are valid for 30 days.)
 
+## Rate Limiting
+
+The API has specific rate limits for different functionalities to ensure fair usage and performance. The limits are as follows:
+
+1. **Open Problem Generator**:
+
+   - **Rate Limit**: 100 requests every 5 minutes per IP address.
+   - **Description**: Users can make up to 100 requests to the problem generator within a 5-minute window.
+
+2. **Registration and Password/Email Reset**:
+
+   - **Rate Limit**: 3 requests every 2 minutes per IP address.
+   - **Description**: This functionality involves sending verification emails. Users are allowed up to 3 registration or password reset requests every 2 minutes.
+
+3. **Login**:
+
+   - **Rate Limit**: 15 requests every hour per IP address.
+   - **Description**: Users can attempt to log in up to 15 times within a 1-hour period.
+
+4. **Other API Features**:
+   - **Rate Limit**: 150 requests every 5 minutes per IP address.
+   - **Description**: For all other API functionalities not explicitly listed, users can send up to 150 requests every 5 minutes.
+
+### Response to Rate Limit Exceedance
+
+If the rate limit is exceeded, the server will respond with a `429 Too Many Requests` status code, indicating that the user has made too many requests in a given timeframe. Users should manage their request rates accordingly to avoid interruptions in service.
+
 ## Endpoints
 
 ### Table of Contents

@@ -6,8 +6,12 @@
 const express = require("express");
 const router = express.Router();
 
+const rateLimiter = require("../utils/rateLimiter");
+
 const classController = require("../controllers/classController");
 const taskController = require("../controllers/taskController");
+
+router.use(rateLimiter());
 
 router.post("/", classController.createClass);
 router.delete("/:id", classController.deleteClass);

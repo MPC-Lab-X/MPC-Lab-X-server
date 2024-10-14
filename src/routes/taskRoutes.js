@@ -6,7 +6,11 @@
 const express = require("express");
 const router = express.Router();
 
+const rateLimiter = require("../utils/rateLimiter");
+
 const taskController = require("../controllers/taskController");
+
+router.use(rateLimiter());
 
 router.get("/:id", taskController.getTask);
 router.delete("/:id", taskController.deleteTask);
