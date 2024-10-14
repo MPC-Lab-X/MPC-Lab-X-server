@@ -17,6 +17,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --verbose --silent --coverage --ci --forceExit --config=tests/jest.config.js"
+    "test": "jest --verbose --silent --coverage --ci --bail --forceExit --config=tests/jest.config.js"
   }
 }
