@@ -26,7 +26,7 @@ router.post(
   rateLimiter(15, 60 * 60 * 1000),
   authController.loginUser
 );
-router.post("/refresh-token", authController.refreshToken);
+router.post("/refresh-token", rateLimiter(), authController.refreshToken);
 
 router.post(
   "/reset-password",
