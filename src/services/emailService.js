@@ -57,7 +57,9 @@ const sendEmailVerification = async (email, token, callbackUrl) => {
       to: email,
       subject: "Verify your email | MPC-Lab",
       text: `Please click the following link to verify your email: ${verificationUrl}`,
-      html: `<p>Please click the following link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a></p>`,
+      html: `<p>Please click the following link to verify your email: <a href="${encodeURI(
+        verificationUrl
+      )}">${encodeURI(verificationUrl)}</a></p>`,
     });
   } catch (error) {
     throw error;
