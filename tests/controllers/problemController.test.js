@@ -29,8 +29,8 @@ describe("ProblemController - getIndex", () => {
 describe("ProblemController - generateProblem", () => {
   it("should generate a problem successfully", () => {
     const req = {
-      params: { 0: "topic1/topic2" },
-      query: { options: "someOptions" },
+      params: { 0: "math/algebra/linear-equations/withFractions" },
+      query: { options: JSON.stringify({}) },
     };
     const res = {
       success: jest.fn(),
@@ -43,8 +43,8 @@ describe("ProblemController - generateProblem", () => {
     problemController.generateProblem(req, res);
 
     expect(ProblemGenerator.prototype.generateOne).toHaveBeenCalledWith({
-      path: ["topic1", "topic2"],
-      options: "someOptions",
+      path: ["math", "algebra", "linear-equations", "withFractions"],
+      options: {},
     });
     expect(res.success).toHaveBeenCalledWith(
       generatedProblem,
@@ -55,7 +55,7 @@ describe("ProblemController - generateProblem", () => {
   it("should return 404 if generator is not found", () => {
     const req = {
       params: { 0: "invalidTopic" },
-      query: { options: "someOptions" },
+      query: { options: JSON.stringify({}) },
     };
     const res = {
       success: jest.fn(),
@@ -77,7 +77,7 @@ describe("ProblemController - generateProblem", () => {
   it("should return 500 if there is an error generating the problem", () => {
     const req = {
       params: { 0: "topic1/topic2" },
-      query: { options: "someOptions" },
+      query: { options: JSON.stringify({}) },
     };
     const res = {
       success: jest.fn(),
