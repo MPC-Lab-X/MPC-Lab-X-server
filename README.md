@@ -36,7 +36,7 @@ npm install
 ```env
 PORT=5000 # Port number for the server (default: 5000)
 HOST=localhost # Host address for the server (default: localhost)
-MONGO_URI=mongodb://localhost/mpc-lab-x # MongoDB connection URI
+MONGODB_URI=mongodb://localhost/mpc-lab-x # MongoDB connection URI
 JWT_SECRET=secret # Secret key for JWT token generation
 EMAIL_HOST=smtp-relay.brevo.com # SMTP host for sending emails
 EMAIL_PORT=587 # SMTP port for sending emails
