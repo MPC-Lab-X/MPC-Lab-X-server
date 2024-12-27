@@ -69,10 +69,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    refreshToken: {
-      type: String,
-      required: false,
-    },
     locked: {
       type: Boolean,
       required: true,
