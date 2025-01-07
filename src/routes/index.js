@@ -19,7 +19,7 @@ router.use("/tasks", taskRoutes);
 
 router.use("/problems", problemRoutes);
 
-router.get("*", (req, res) => {
+router.use("*", (req, res) => {
   res.notFound();
 });
 
